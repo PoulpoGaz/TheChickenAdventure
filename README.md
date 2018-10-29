@@ -24,6 +24,8 @@ Github: https://github.com/PoulpoGaz/TheChickenAdventureI
 # V) Info suplémentaire
 
 Les niveaux viennent du jeu Boxxle. Il y a les 53 premiers niveaux(sans le 39, 45 et 48)
+Youtube: https://www.youtube.com/channel/UCICvk9cSz-tmk42xImnfH5Q/featured
+
 
 # VI) Patch log
 

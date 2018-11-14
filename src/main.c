@@ -107,46 +107,46 @@ void update() {
         chicken=chicken_right;
         dx++;
     }
-    if(kb_ScanGroup(kb_group_7)) {
-        switch(level[nbLvl][y+dy][x+dx]) {
-        case 1:
+
+    switch(level[nbLvl][y+dy][x+dx]) {
+    case 1:
+        y+=dy;
+        x+=dx;
+        break;
+    case 2:
+        y+=dy;
+        x+=dx;
+        break;
+    case 3:
+        if(level[nbLvl][y+2*dy][x+2*dx]==1) {
+            level[nbLvl][y+dy][x+dx]=1;
+            level[nbLvl][y+2*dy][x+2*dx]=3;
             y+=dy;
             x+=dx;
-            break;
-        case 2:
+        } else if(level[nbLvl][y+2*dy][x+2*dx]==2) {
+            level[nbLvl][y+dy][x+dx]=1;
+            level[nbLvl][y+2*dy][x+2*dx]=4;
             y+=dy;
             x+=dx;
-            break;
-        case 3:
-            if(level[nbLvl][y+2*dy][x+2*dx]==1) {
-                level[nbLvl][y+dy][x+dx]=1;
-                level[nbLvl][y+2*dy][x+2*dx]=3;
-                y+=dy;
-                x+=dx;
-            } else if(level[nbLvl][y+2*dy][x+2*dx]==2) {
-                level[nbLvl][y+dy][x+dx]=1;
-                level[nbLvl][y+2*dy][x+2*dx]=4;
-                y+=dy;
-                x+=dx;
-                nbCaisseOk++;
-            }
-            break;
-        case 4:
-            if(level[nbLvl][y+2*dy][x+2*dx]==1) {
-                level[nbLvl][y+dy][x+dx]=2;
-                level[nbLvl][y+2*dy][x+2*dx]=3;
-                y+=dy;
-                x+=dx;
-                nbCaisseOk--;
-            } else if(level[nbLvl][y+2*dy][x+2*dx]==2) {
-                level[nbLvl][y+dy][x+dx]=2;
-                level[nbLvl][y+2*dy][x+2*dx]=4;
-                y+=dy;
-                x+=dx;
-            }
-            break;
+            nbCaisseOk++;
         }
+        break;
+    case 4:
+        if(level[nbLvl][y+2*dy][x+2*dx]==1) {
+            level[nbLvl][y+dy][x+dx]=2;
+            level[nbLvl][y+2*dy][x+2*dx]=3;
+            y+=dy;
+            x+=dx;
+            nbCaisseOk--;
+        } else if(level[nbLvl][y+2*dy][x+2*dx]==2) {
+            level[nbLvl][y+dy][x+dx]=2;
+            level[nbLvl][y+2*dy][x+2*dx]=4;
+            y+=dy;
+            x+=dx;
+        }
+        break;
     }
+
 }
 
 void check_victory() {
@@ -220,9 +220,9 @@ void game() {
     generate();
     render();
     while(kb_ScanGroup(kb_group_1) != kb_Del) {
-        if(kb_ScanGroup(kb_group_7)) render();
         nopwait(30000);
         update();
+        render();
         check_victory();
         if(nbLvl==50) break;
         if(kb_ScanGroup(kb_group_1)==kb_2nd) {

@@ -31,3 +31,4 @@ Youtube: https://www.youtube.com/channel/UCICvk9cSz-tmk42xImnfH5Q/featured
 
 v1.0-Release
 v1.1-Lvl14 corrigé
+v1.2-Lvl31 corrigé et enlèvement de condition non-nécessaire

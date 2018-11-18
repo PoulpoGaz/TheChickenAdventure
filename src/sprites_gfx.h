@@ -51,10 +51,10 @@ extern uint8_t mur_data[258];
 #define objectif_size 258
 extern uint8_t objectif_data[258];
 #define objectif ((gfx_sprite_t*)objectif_data)
-#define doctor_chicken_width 28
-#define doctor_chicken_height 44
-#define doctor_chicken_size 1234
-extern uint8_t doctor_chicken_data[1234];
+#define doctor_chicken_width 7
+#define doctor_chicken_height 11
+#define doctor_chicken_size 79
+extern uint8_t doctor_chicken_data[79];
 #define doctor_chicken ((gfx_sprite_t*)doctor_chicken_data)
 #define intro_width 160
 #define intro_height 98

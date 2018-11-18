@@ -1,0 +1,20 @@
+; Zilog eZ80 ANSI C Compiler Release 3.4
+; -optsize -noreduceopt -nomodsect -peephole -globalopt
+; -localcse -const=ROM 
+	FILE	"SRC\TILEMAP\TILEMAP.C"
+	.assume ADL=1
+	SEGMENT DATA
+_tilemap_compressed:
+	DB	0
+	DB	128
+	DB	74
+	DB	160
+	DB	0
+	DB	0
+	DB	16
+	XDEF _tilemap_compressed
+;    1	// Converted using ConvTile
+;    2	#include <stdint.h>
+;    3	
+;    4	uint8_t tilemap_compressed[7] = {
+	END

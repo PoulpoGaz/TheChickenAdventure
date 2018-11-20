@@ -3110,8 +3110,8 @@ L_193:
 ;  404	    {
 ;  405	        *brightness = i;
 	LD	A,(IX+-1)
-;  406	        nopwait(2000);
-	LD	BC,2000
+;  406	        nopwait(5000);
+	LD	BC,5000
 	PUSH	BC
 	LD	HL,(_brightness)
 	LD	(HL),A
@@ -3157,8 +3157,8 @@ L_198:
 ;  413	    {
 ;  414	        *brightness = i;
 	LD	A,(IX+-1)
-;  415	        nopwait(2000);
-	LD	BC,2000
+;  415	        nopwait(5000);
+	LD	BC,5000
 	PUSH	BC
 	LD	HL,(_brightness)
 	LD	(HL),A

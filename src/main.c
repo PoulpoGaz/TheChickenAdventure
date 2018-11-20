@@ -403,7 +403,7 @@ void FadeIn() {
     for (i=*brightness; i>=normalB/*Here replace userBrightness by normalB*/; i--)
     {
         *brightness = i;
-        nopwait(2000);
+        nopwait(5000);
     }
 }
 
@@ -412,6 +412,6 @@ void FadeOut() {
     for (i=*brightness; i<=minBrightness; i++)
     {
         *brightness = i;
-        nopwait(2000);
+        nopwait(5000);
     }
 }

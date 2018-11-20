@@ -33,7 +33,8 @@ void FadeOut();
 
 gfx_sprite_t *chicken = chicken_down;
 uint8_t y=0,x=0;
-uint8_t nbObj=0,nbCaisseOk=0,push=0,moves=0;
+uint8_t nbObj=0,nbCaisseOk=0;
+uint24_t push=0,moves=0;
 uint8_t nbLvl=0;
 uint8_t maxLvl=0;
 uint8_t level[50][15][20];

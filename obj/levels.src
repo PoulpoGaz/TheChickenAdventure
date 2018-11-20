@@ -72,19 +72,23 @@ _levels:
 	DB	1
 	DB	1
 	DB	1
+	DB	2
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
 	DB	1
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	0
 	DB	0
 	DB	0
 	DB	0
@@ -92,10 +96,6 @@ _levels:
 	DB	0
 	DB	0
 	DB	0
-	DB	1
-	DB	0
-	DB	0
-	DB	0
 	DB	0
 	DB	0
 	DB	0
@@ -107,12 +107,12 @@ _levels:
 	DB	0
 	DB	0
 	DB	1
-	DB	1
+	DB	3
 	DB	1
 	DB	0
 	DB	0
 	DB	0
-	DB	1
+	DB	2
 	DB	0
 	DB	0
 	DB	0
@@ -127,7 +127,7 @@ _levels:
 	DB	0
 	DB	0
 	DB	1
-	DB	1
+	DB	3
 	DB	3
 	DB	0
 	DB	0

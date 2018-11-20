@@ -32,3 +32,5 @@ Youtube: https://www.youtube.com/channel/UCICvk9cSz-tmk42xImnfH5Q/featured
 v1.0-Release
 v1.1-Lvl14 corrigé
 v1.2-Lvl31 corrigé et enlèvement de condition non-nécessaire
+v1.3-Quelque optimisation. Transition niveau. Menu statistiques (Push et Mouvements).
+v1.3.1-Corrections

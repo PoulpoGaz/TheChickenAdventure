@@ -15,8 +15,10 @@ _nbObj:
 _nbCaisseOk:
 	DB	0
 _push:
+	DW	0
 	DB	0
 _moves:
+	DW	0
 	DB	0
 _nbLvl:
 	DB	0
@@ -76,33 +78,34 @@ _normalB:
 ;   33	
 ;   34	gfx_sprite_t *chicken = chicken_down;
 ;   35	uint8_t y=0,x=0;
-;   36	uint8_t nbObj=0,nbCaisseOk=0,push=0,moves=0;
-;   37	uint8_t nbLvl=0;
-;   38	uint8_t maxLvl=0;
-;   39	uint8_t level[50][15][20];
-;   40	uint24_t Moves[50];
-;   41	uint24_t Pushs[50];
-;   42	bool language=false;
-;   43	uint8_t* brightness = (uint8_t*)0xF60024;
-;   44	uint8_t minBrightness  = 229;  
-;   45	uint8_t maxBrightness  = 49;   
-;   46	uint8_t normalB;
+;   36	uint8_t nbObj=0,nbCaisseOk=0;
+;   37	uint24_t push=0,moves=0;
+;   38	uint8_t nbLvl=0;
+;   39	uint8_t maxLvl=0;
+;   40	uint8_t level[50][15][20];
+;   41	uint24_t Moves[50];
+;   42	uint24_t Pushs[50];
+;   43	bool language=false;
+;   44	uint8_t* brightness = (uint8_t*)0xF60024;
+;   45	uint8_t minBrightness  = 229;  
+;   46	uint8_t maxBrightness  = 49;   
+;   47	uint8_t normalB;
 	SEGMENT CODE
-;   47	
-;   48	void main(void) {
+;   48	
+;   49	void main(void) {
 _main:
 	LD	HL,-1
 	CALL	__frameset
-;   49	    ti_var_t file;
-;   50	    srand(rtc_Time());
+;   50	    ti_var_t file;
+;   51	    srand(rtc_Time());
 	LD	BC,(15925316)
 	PUSH	BC
 	CALL	_srand
 	POP	BC
-;   51	
-;   52	    ti_CloseAll();
+;   52	
+;   53	    ti_CloseAll();
 	CALL	_ti_CloseAll
-;   53	    file = ti_Open("CHKNSV", "r+");
+;   54	    file = ti_Open("CHKNSV", "r+");
 	LD	BC,L__0
 	PUSH	BC
 	LD	BC,L__1
@@ -111,10 +114,10 @@ _main:
 	POP	BC
 	POP	BC
 	LD	(IX+-1),A
-;   54	    if(file) {
+;   55	    if(file) {
 	OR	A,A
 	JR	Z,L_1
-;   55	        ti_Read(&maxLvl, sizeof(uint8_t), sizeof(maxLvl)/sizeof(uint8_t), file);
+;   56	        ti_Read(&maxLvl, sizeof(uint8_t), sizeof(maxLvl)/sizeof(uint8_t), file);
 	LD	C,(IX+-1)
 	LD	B,0
 	PUSH	BC
@@ -128,7 +131,7 @@ _main:
 	POP	BC
 	POP	BC
 	POP	BC
-;   56	        ti_Read(&Moves, sizeof(uint24_t), sizeof(Moves)/sizeof(uint24_t), file);
+;   57	        ti_Read(&Moves, sizeof(uint24_t), sizeof(Moves)/sizeof(uint24_t), file);
 	LD	C,(IX+-1)
 	LD	B,0
 	PUSH	BC
@@ -143,7 +146,7 @@ _main:
 	POP	BC
 	POP	BC
 	POP	BC
-;   57	        ti_Read(&Pushs, sizeof(uint24_t), sizeof(Moves)/sizeof(uint24_t), file);
+;   58	        ti_Read(&Pushs, sizeof(uint24_t), sizeof(Moves)/sizeof(uint24_t), file);
 	LD	C,(IX+-1)
 	LD	B,0
 	PUSH	BC
@@ -158,7 +161,7 @@ _main:
 	POP	BC
 	POP	BC
 	POP	BC
-;   58	        ti_Read(&language, sizeof(bool), sizeof(language)/sizeof(bool), file);
+;   59	        ti_Read(&language, sizeof(bool), sizeof(language)/sizeof(bool), file);
 	LD	C,(IX+-1)
 	LD	B,0
 	PUSH	BC
@@ -172,14 +175,14 @@ _main:
 	POP	BC
 	POP	BC
 	POP	BC
-;   59	    }
+;   60	    }
 L_1:
-;   60	    nbLvl=maxLvl;
+;   61	    nbLvl=maxLvl;
 	LD	A,(_maxLvl)
 	LD	(_nbLvl),A
-;   61	    normalB = *brightness;
-;   62	
-;   63	    gfx_Begin(gfx_8bpp);
+;   62	    normalB = *brightness;
+;   63	
+;   64	    gfx_Begin(gfx_8bpp);
 	LD	BC,39
 	PUSH	BC
 	LD	HL,(_brightness)
@@ -187,7 +190,7 @@ L_1:
 	LD	(_normalB),A
 	CALL	_gfx_Begin
 	POP	BC
-;   64	    gfx_SetPalette(sprites_gfx_pal, sizeof sprites_gfx_pal, 0);
+;   65	    gfx_SetPalette(sprites_gfx_pal, sizeof sprites_gfx_pal, 0);
 	LD	BC,0
 	PUSH	BC
 	LD	BC,352
@@ -198,22 +201,22 @@ L_1:
 	POP	BC
 	POP	BC
 	POP	BC
-;   65	    gfx_SetTextFGColor(0x00);
+;   66	    gfx_SetTextFGColor(0x00);
 	LD	BC,0
 	PUSH	BC
 	CALL	_gfx_SetTextFGColor
 	POP	BC
-;   66	    gfx_SetDrawBuffer();
+;   67	    gfx_SetDrawBuffer();
 	LD	BC,1
 	PUSH	BC
 	CALL	_gfx_SetDraw
 	POP	BC
-;   67	
-;   68	    menu();
+;   68	
+;   69	    menu();
 	CALL	_menu
-;   69	    ti_CloseAll();
+;   70	    ti_CloseAll();
 	CALL	_ti_CloseAll
-;   70	    file = ti_Open("CHKNSV", "w");
+;   71	    file = ti_Open("CHKNSV", "w");
 	LD	BC,L__3
 	PUSH	BC
 	LD	BC,L__4
@@ -222,10 +225,10 @@ L_1:
 	POP	BC
 	POP	BC
 	LD	(IX+-1),A
-;   71	    if(file){
+;   72	    if(file){
 	OR	A,A
 	JR	Z,L_3
-;   72	        ti_Write(&maxLvl, sizeof(uint8_t), sizeof(maxLvl)/sizeof(uint8_t), file);
+;   73	        ti_Write(&maxLvl, sizeof(uint8_t), sizeof(maxLvl)/sizeof(uint8_t), file);
 	LD	C,(IX+-1)
 	LD	B,0
 	PUSH	BC
@@ -239,7 +242,7 @@ L_1:
 	POP	BC
 	POP	BC
 	POP	BC
-;   73	        ti_Write(&Moves, sizeof(uint24_t), sizeof(Moves)/sizeof(uint24_t), file);
+;   74	        ti_Write(&Moves, sizeof(uint24_t), sizeof(Moves)/sizeof(uint24_t), file);
 	LD	C,(IX+-1)
 	LD	B,0
 	PUSH	BC
@@ -254,7 +257,7 @@ L_1:
 	POP	BC
 	POP	BC
 	POP	BC
-;   74	        ti_Write(&Pushs, sizeof(uint24_t), sizeof(Moves)/sizeof(uint24_t), file);
+;   75	        ti_Write(&Pushs, sizeof(uint24_t), sizeof(Moves)/sizeof(uint24_t), file);
 	LD	C,(IX+-1)
 	LD	B,0
 	PUSH	BC
@@ -269,7 +272,7 @@ L_1:
 	POP	BC
 	POP	BC
 	POP	BC
-;   75	        ti_Write(&language, sizeof(bool), sizeof(language)/sizeof(bool), file);
+;   76	        ti_Write(&language, sizeof(bool), sizeof(language)/sizeof(bool), file);
 	LD	C,(IX+-1)
 	LD	B,0
 	PUSH	BC
@@ -283,9 +286,9 @@ L_1:
 	POP	BC
 	POP	BC
 	POP	BC
-;   76	    }
+;   77	    }
 L_3:
-;   77	    ti_SetArchiveStatus(true, file);
+;   78	    ti_SetArchiveStatus(true, file);
 	LD	C,(IX+-1)
 	LD	B,0
 	PUSH	BC
@@ -294,14 +297,14 @@ L_3:
 	CALL	_ti_SetArchiveStatus
 	POP	BC
 	POP	BC
-;   78	    gfx_End();
+;   79	    gfx_End();
 	CALL	_gfx_End
-;   79	    prgm_CleanUp();
-;   80	    *brightness = normalB;
+;   80	    prgm_CleanUp();
+;   81	    *brightness = normalB;
 	LD	HL,(_brightness)
 	LD	A,(_normalB)
 	LD	(HL),A
-;   81	}
+;   82	}
 	LD	SP,IX
 	POP	IX
 	RET	
@@ -350,44 +353,43 @@ L__4:
 	DB	"CHKNSV"
 	DB	0
 	SEGMENT CODE
-;   82	
-;   83	void generate() {
+;   83	
+;   84	void generate() {
 _generate:
 	LD	HL,-11
 	CALL	__frameset
-;   84	    uint8_t tileX, tileY;
-;   85	    nbObj=0;
-	XOR	A,A
-;   86	    nbCaisseOk=0;
-;   87	    moves=0;
-;   88	    push=0;
-;   89	    memcpy(level,levels,15000);
+;   85	    uint8_t tileX, tileY;
+;   86	    nbObj=0;
+;   87	    nbCaisseOk=0;
+;   88	    moves=0;
+;   89	    push=0;
+;   90	    memcpy(level,levels,15000);
 	LD	BC,15000
 	PUSH	BC
-	LD	(_nbObj),A
 	LD	BC,_levels
 	PUSH	BC
 	XOR	A,A
 	LD	BC,_level
 	PUSH	BC
+	LD	(_nbObj),A
+	XOR	A,A
 	LD	(_nbCaisseOk),A
-	XOR	A,A
-	LD	(_moves),A
-	XOR	A,A
-	LD	(_push),A
+	LD	BC,0
+	LD	(_moves),BC
+	LD	(_push),BC
 	CALL	_memcpy
 	POP	BC
 	POP	BC
 	POP	BC
-;   90	    for(tileY=0; tileY<15; tileY++) {
+;   91	    for(tileY=0; tileY<15; tileY++) {
 	LD	(IX+-2),0
 	JR	L_16
 L_14:
-;   91	        for(tileX=0; tileX<20; tileX++) {
+;   92	        for(tileX=0; tileX<20; tileX++) {
 	LD	(IX+-1),0
 	JR	L_13
 L_11:
-;   92	            if(level[nbLvl][tileY][tileX]==5) {
+;   93	            if(level[nbLvl][tileY][tileX]==5) {
 	LD	A,(IX+-2)
 	UEXT	HL
 	LD	L,A
@@ -415,13 +417,13 @@ L_11:
 	LD	BC,5
 	SBC	HL,BC
 	JR	NZ,L_10
-;   93	                x=tileX;
+;   94	                x=tileX;
 	LD	A,(IX+-1)
 	LD	(_x),A
-;   94	                y=tileY;
+;   95	                y=tileY;
 	LD	A,(IX+-2)
 	LD	(_y),A
-;   95	                level[nbLvl][tileY][tileX]=1;
+;   96	                level[nbLvl][tileY][tileX]=1;
 	LD	A,(_nbLvl)
 	UEXT	HL
 	LD	L,A
@@ -439,7 +441,7 @@ L_11:
 	LD	L,A
 	ADD	HL,BC
 	LD	(HL),1
-;   96	            } else if(level[nbLvl][tileY][tileX]==2) nbObj++;
+;   97	            } else if(level[nbLvl][tileY][tileX]==2) nbObj++;
 	JR	L_12
 L_10:
 	LD	A,(_nbLvl)
@@ -466,7 +468,7 @@ L_10:
 	LD	A,(_nbObj)
 	INC	A
 	LD	(_nbObj),A
-;   97	        }
+;   98	        }
 L_12:
 	INC	(IX+-1)
 L_13:
@@ -474,12 +476,12 @@ L_13:
 	CP	A,20
 	JR	C,L_11
 	INC	(IX+-2)
-;   98	    }
+;   99	    }
 L_16:
 	LD	A,(IX+-2)
 	CP	A,15
 	JR	C,L_14
-;   99	}
+;  100	}
 	LD	SP,IX
 	POP	IX
 	RET	
@@ -493,8 +495,8 @@ L_16:
 ;_level                              STATIC  15000   variable
 ;_levels                             IMPORT  15000   variable
 ;_memcpy                             IMPORT  -----   function
-;_push                               STATIC      1   variable
-;_moves                              STATIC      1   variable
+;_push                               STATIC      3   variable
+;_moves                              STATIC      3   variable
 ;_nbCaisseOk                         STATIC      1   variable
 ;_nbObj                              STATIC      1   variable
 ;G_0                                   IX-5      3   variable
@@ -506,21 +508,21 @@ L_16:
 ;       Spill Code: 0 (instruction)
 
 
-;  100	
-;  101	void render() {
+;  101	
+;  102	void render() {
 _render:
 	LD	HL,-5
 	CALL	__frameset
-;  102	    uint8_t tileX, tileY;
-;  103	    for(tileY=0; tileY<15; tileY++) {
+;  103	    uint8_t tileX, tileY;
+;  104	    for(tileY=0; tileY<15; tileY++) {
 	LD	(IX+-2),0
 	JR	L_37
 L_35:
-;  104	        for(tileX=0; tileX<20; tileX++) {
+;  105	        for(tileX=0; tileX<20; tileX++) {
 	LD	(IX+-1),0
 	JR	L_34
 L_32:
-;  105	            if(level[nbLvl][tileY][tileX]==0) gfx_Sprite(mur,tileX*16,tileY*16);
+;  106	            if(level[nbLvl][tileY][tileX]==0) gfx_Sprite(mur,tileX*16,tileY*16);
 	LD	A,(IX+-2)
 	UEXT	HL
 	LD	L,A
@@ -566,7 +568,7 @@ L_32:
 	POP	BC
 	POP	BC
 	POP	BC
-;  106	            else if(level[nbLvl][tileY][tileX]==1) gfx_Sprite(grass,tileX*16,tileY*16);
+;  107	            else if(level[nbLvl][tileY][tileX]==1) gfx_Sprite(grass,tileX*16,tileY*16);
 	JR	L_31
 L_28:
 	LD	A,(_nbLvl)
@@ -612,7 +614,7 @@ L_28:
 	POP	BC
 	POP	BC
 	POP	BC
-;  107	            else if(level[nbLvl][tileY][tileX]==2) gfx_Sprite(objectif,tileX*16,tileY*16);
+;  108	            else if(level[nbLvl][tileY][tileX]==2) gfx_Sprite(objectif,tileX*16,tileY*16);
 	JR	L_31
 L_26:
 	LD	A,(_nbLvl)
@@ -658,7 +660,7 @@ L_26:
 	POP	BC
 	POP	BC
 	POP	BC
-;  108	            else if(level[nbLvl][tileY][tileX]==3) gfx_Sprite(caisse,tileX*16,tileY*16);
+;  109	            else if(level[nbLvl][tileY][tileX]==3) gfx_Sprite(caisse,tileX*16,tileY*16);
 	JR	L_31
 L_24:
 	LD	A,(_nbLvl)
@@ -704,7 +706,7 @@ L_24:
 	POP	BC
 	POP	BC
 	POP	BC
-;  109	            else if(level[nbLvl][tileY][tileX]==4) gfx_Sprite(caisse_ok,tileX*16,tileY*16);
+;  110	            else if(level[nbLvl][tileY][tileX]==4) gfx_Sprite(caisse_ok,tileX*16,tileY*16);
 	JR	L_31
 L_22:
 	LD	A,(_nbLvl)
@@ -751,7 +753,7 @@ L_22:
 	POP	BC
 	POP	BC
 L_31:
-;  110	            if(tileX==x&&tileY==y)gfx_TransparentSprite(chicken,x*16,y*16);
+;  111	            if(tileX==x&&tileY==y)gfx_TransparentSprite(chicken,x*16,y*16);
 	LD	A,(_x)
 	CP	A,(IX+-1)
 	JR	NZ,L_33
@@ -780,8 +782,8 @@ L_31:
 	POP	BC
 	POP	BC
 	POP	BC
-;  111	
-;  112	        }
+;  112	
+;  113	        }
 L_33:
 	INC	(IX+-1)
 L_34:
@@ -789,12 +791,12 @@ L_34:
 	CP	A,20
 	JR	C,L_32
 	INC	(IX+-2)
-;  113	    }
+;  114	    }
 L_37:
 	LD	A,(IX+-2)
 	CP	A,15
 	JR	C,L_35
-;  114	    gfx_PrintStringXY("Level:",0,0);
+;  115	    gfx_PrintStringXY("Level:",0,0);
 	LD	BC,0
 	PUSH	BC
 	PUSH	BC
@@ -804,7 +806,7 @@ L_37:
 	POP	BC
 	POP	BC
 	POP	BC
-;  115	    gfx_SetTextXY(45,0);
+;  116	    gfx_SetTextXY(45,0);
 	LD	BC,0
 	PUSH	BC
 	LD	BC,45
@@ -812,7 +814,7 @@ L_37:
 	CALL	_gfx_SetTextXY
 	POP	BC
 	POP	BC
-;  116	    gfx_PrintUInt(nbLvl+1,2);
+;  117	    gfx_PrintUInt(nbLvl+1,2);
 	LD	A,(_nbLvl)
 	UEXT	HL
 	LD	L,A
@@ -823,7 +825,7 @@ L_37:
 	CALL	_gfx_PrintUInt
 	POP	BC
 	POP	BC
-;  117	    gfx_PrintStringXY("Mouvements",80, 0);
+;  118	    gfx_PrintStringXY("Mouvements",80, 0);
 	LD	BC,0
 	PUSH	BC
 	LD	BC,80
@@ -834,7 +836,7 @@ L_37:
 	POP	BC
 	POP	BC
 	POP	BC
-;  118	    gfx_SetTextXY(170,0);
+;  119	    gfx_SetTextXY(170,0);
 	LD	BC,0
 	PUSH	BC
 	LD	BC,170
@@ -842,17 +844,15 @@ L_37:
 	CALL	_gfx_SetTextXY
 	POP	BC
 	POP	BC
-;  119	    gfx_PrintUInt(moves, 5);
-	LD	A,(_moves)
-	UEXT	HL
+;  120	    gfx_PrintUInt(moves, 5);
 	LD	BC,5
 	PUSH	BC
-	LD	L,A
-	PUSH	HL
+	LD	BC,(_moves)
+	PUSH	BC
 	CALL	_gfx_PrintUInt
 	POP	BC
 	POP	BC
-;  120	    gfx_PrintStringXY("Push:",220,0);
+;  121	    gfx_PrintStringXY("Push:",220,0);
 	LD	BC,0
 	PUSH	BC
 	LD	BC,220
@@ -863,7 +863,7 @@ L_37:
 	POP	BC
 	POP	BC
 	POP	BC
-;  121	    gfx_SetTextXY(260,0);
+;  122	    gfx_SetTextXY(260,0);
 	LD	BC,0
 	PUSH	BC
 	LD	BC,260
@@ -871,17 +871,15 @@ L_37:
 	CALL	_gfx_SetTextXY
 	POP	BC
 	POP	BC
-;  122	    gfx_PrintUInt(push, 5),
-	LD	A,(_push)
-	UEXT	HL
+;  123	    gfx_PrintUInt(push, 5),
 	LD	BC,5
 	PUSH	BC
-	LD	L,A
-	PUSH	HL
+	LD	BC,(_push)
+	PUSH	BC
 	CALL	_gfx_PrintUInt
 	POP	BC
 	POP	BC
-;  123	    print_string_centered("[2nd]-recommencer [Del]-retour", 230);
+;  124	    print_string_centered("[2nd]-recommencer [Del]-retour", 230);
 	LD	BC,230
 	PUSH	BC
 	LD	BC,L__24
@@ -889,9 +887,9 @@ L_37:
 	CALL	_print_string_centered
 	POP	BC
 	POP	BC
-;  124	    gfx_SwapDraw();
+;  125	    gfx_SwapDraw();
 	CALL	_gfx_SwapDraw
-;  125	}
+;  126	}
 	LD	SP,IX
 	POP	IX
 	RET	
@@ -901,8 +899,8 @@ L_37:
 ;Name                         Addr/Register   Size   Type
 ;_gfx_SwapDraw                       IMPORT  -----   function
 ;_print_string_centered              IMPORT  -----   function
-;_push                               STATIC      1   variable
-;_moves                              STATIC      1   variable
+;_push                               STATIC      3   variable
+;_moves                              STATIC      3   variable
 ;_gfx_PrintUInt                      IMPORT  -----   function
 ;_gfx_SetTextXY                      IMPORT  -----   function
 ;_gfx_PrintStringXY                  IMPORT  -----   function
@@ -941,12 +939,12 @@ L__24:
 	DB	"[2nd]-recommencer [Del]-retour"
 	DB	0
 	SEGMENT CODE
-;  126	
-;  127	void update() {
+;  127	
+;  128	void update() {
 _update:
-;  128	    int dx=0;
-;  129	    int dy=0;
-;  130	    if(kb_ScanGroup(kb_group_7) == kb_Up) {
+;  129	    int dx=0;
+;  130	    int dy=0;
+;  131	    if(kb_ScanGroup(kb_group_7) == kb_Up) {
 	LD	BC,7
 	PUSH	BC
 	CALL	_kb_ScanGroup
@@ -957,9 +955,9 @@ _update:
 	LD	BC,8
 	SBC	HL,BC
 	JR	NZ,L_50
-;  131	        chicken=chicken_up;
-;  132	        dy--;
-;  133	        colide(dx,dy);
+;  132	        chicken=chicken_up;
+;  133	        dy--;
+;  134	        colide(dx,dy);
 	LD	BC,16777215
 	PUSH	BC
 	LD	BC,0
@@ -969,7 +967,7 @@ _update:
 	CALL	_colide
 	POP	BC
 	POP	BC
-;  134	    } else if(kb_ScanGroup(kb_group_7) == kb_Down) {
+;  135	    } else if(kb_ScanGroup(kb_group_7) == kb_Down) {
 	JR	L_51
 L_50:
 	LD	BC,7
@@ -982,9 +980,9 @@ L_50:
 	LD	BC,1
 	SBC	HL,BC
 	JR	NZ,L_48
-;  135	        chicken=chicken_down;
-;  136	        dy++;
-;  137	        colide(dx,dy);
+;  136	        chicken=chicken_down;
+;  137	        dy++;
+;  138	        colide(dx,dy);
 	PUSH	BC
 	LD	BC,0
 	PUSH	BC
@@ -993,7 +991,7 @@ L_50:
 	CALL	_colide
 	POP	BC
 	POP	BC
-;  138	    } else if(kb_ScanGroup(kb_group_7) == kb_Left) {
+;  139	    } else if(kb_ScanGroup(kb_group_7) == kb_Left) {
 	JR	L_51
 L_48:
 	LD	BC,7
@@ -1006,9 +1004,9 @@ L_48:
 	LD	BC,2
 	SBC	HL,BC
 	JR	NZ,L_46
-;  139	        chicken=chicken_left;
-;  140	        dx--;
-;  141	        colide(dx,dy);
+;  140	        chicken=chicken_left;
+;  141	        dx--;
+;  142	        colide(dx,dy);
 	LD	BC,0
 	PUSH	BC
 	LD	BC,16777215
@@ -1018,7 +1016,7 @@ L_48:
 	CALL	_colide
 	POP	BC
 	POP	BC
-;  142	    } else if(kb_ScanGroup(kb_group_7) == kb_Right) {
+;  143	    } else if(kb_ScanGroup(kb_group_7) == kb_Right) {
 	JR	L_51
 L_46:
 	LD	BC,7
@@ -1031,9 +1029,9 @@ L_46:
 	LD	BC,4
 	SBC	HL,BC
 	JR	NZ,L_51
-;  143	        chicken=chicken_right;
-;  144	        dx++;
-;  145	        colide(dx,dy);
+;  144	        chicken=chicken_right;
+;  145	        dx++;
+;  146	        colide(dx,dy);
 	LD	BC,0
 	PUSH	BC
 	LD	BC,1
@@ -1043,8 +1041,8 @@ L_46:
 	CALL	_colide
 	POP	BC
 	POP	BC
-;  146	    }
-;  147	}
+;  147	    }
+;  148	}
 L_51:
 	RET	
 
@@ -1064,12 +1062,12 @@ L_51:
 ;       Spill Code: 0 (instruction)
 
 
-;  148	
-;  149	void colide(int dx, int dy) {
+;  149	
+;  150	void colide(int dx, int dy) {
 _colide:
 	LD	HL,-18
 	CALL	__frameset
-;  150	    switch(level[nbLvl][y+dy][x+dx]) {
+;  151	    switch(level[nbLvl][y+dy][x+dx]) {
 	LD	A,(_y)
 	UEXT	HL
 	LD	L,A
@@ -1113,45 +1111,45 @@ L__31:
 
 	DW24	L_76	
 
-;  151	    case 1:
+;  152	    case 1:
 L_52:
-;  152	        y+=dy;
+;  153	        y+=dy;
 	LD	BC,(_y)
 	LD	A,(IX+9)
 	ADD	A,C
 	LD	(_y),A
-;  153	        x+=dx;
+;  154	        x+=dx;
 	LD	BC,(_x)
 	LD	A,(IX+6)
 	ADD	A,C
 	LD	(_x),A
-;  154	        moves++;
-	LD	A,(_moves)
-	INC	A
-	LD	(_moves),A
-;  155	        break;
+;  155	        moves++;
+	LD	BC,(_moves)
+	INC	BC
+	LD	(_moves),BC
+;  156	        break;
 	JR	L_76
-;  156	    case 2:
+;  157	    case 2:
 L_54:
-;  157	        y+=dy;
+;  158	        y+=dy;
 	LD	BC,(_y)
 	LD	A,(IX+9)
 	ADD	A,C
 	LD	(_y),A
-;  158	        x+=dx;
+;  159	        x+=dx;
 	LD	BC,(_x)
 	LD	A,(IX+6)
 	ADD	A,C
 	LD	(_x),A
-;  159	        moves++;
-	LD	A,(_moves)
-	INC	A
-	LD	(_moves),A
-;  160	        break;
+;  160	        moves++;
+	LD	BC,(_moves)
+	INC	BC
+	LD	(_moves),BC
+;  161	        break;
 	JR	L_76
-;  161	    case 3:
+;  162	    case 3:
 L_56:
-;  162	        if(level[nbLvl][y+2*dy][x+2*dx]==1) {
+;  163	        if(level[nbLvl][y+2*dy][x+2*dx]==1) {
 	LD	HL,(IX+9)
 	ADD	HL,HL
 	LD	BC,HL
@@ -1188,7 +1186,7 @@ L_56:
 	LD	BC,1
 	SBC	HL,BC
 	JR	NZ,L_64
-;  163	            level[nbLvl][y+dy][x+dx]=1;
+;  164	            level[nbLvl][y+dy][x+dx]=1;
 	LD	A,(_nbLvl)
 	UEXT	HL
 	LD	L,A
@@ -1201,7 +1199,7 @@ L_56:
 	LD	BC,(IX+-3)
 	ADD	HL,BC
 	LD	(HL),1
-;  164	            level[nbLvl][y+2*dy][x+2*dx]=3;
+;  165	            level[nbLvl][y+2*dy][x+2*dx]=3;
 	LD	A,(_nbLvl)
 	UEXT	HL
 	LD	L,A
@@ -1214,25 +1212,25 @@ L_56:
 	LD	BC,(IX+-9)
 	ADD	HL,BC
 	LD	(HL),3
-;  165	            y+=dy;
+;  166	            y+=dy;
 	LD	BC,(_y)
 	LD	A,(IX+9)
 	ADD	A,C
 	LD	(_y),A
-;  166	            x+=dx;
+;  167	            x+=dx;
 	LD	BC,(_x)
 	LD	A,(IX+6)
 	ADD	A,C
 	LD	(_x),A
-;  167	            moves++;
-	LD	A,(_moves)
-	INC	A
-	LD	(_moves),A
-;  168	            push++;
-	LD	A,(_push)
-	INC	A
-	LD	(_push),A
-;  169	        } else if(level[nbLvl][y+2*dy][x+2*dx]==2) {
+;  168	            moves++;
+	LD	BC,(_moves)
+	INC	BC
+	LD	(_moves),BC
+;  169	            push++;
+	LD	BC,(_push)
+	INC	BC
+	LD	(_push),BC
+;  170	        } else if(level[nbLvl][y+2*dy][x+2*dx]==2) {
 	JR	L_76
 L_64:
 	LD	A,(_nbLvl)
@@ -1253,7 +1251,7 @@ L_64:
 	LD	BC,2
 	SBC	HL,BC
 	JR	NZ,L_76
-;  170	            level[nbLvl][y+dy][x+dx]=1;
+;  171	            level[nbLvl][y+dy][x+dx]=1;
 	LD	A,(_nbLvl)
 	UEXT	HL
 	LD	L,A
@@ -1266,7 +1264,7 @@ L_64:
 	LD	BC,(IX+-3)
 	ADD	HL,BC
 	LD	(HL),1
-;  171	            level[nbLvl][y+2*dy][x+2*dx]=4;
+;  172	            level[nbLvl][y+2*dy][x+2*dx]=4;
 	LD	A,(_nbLvl)
 	UEXT	HL
 	LD	L,A
@@ -1279,34 +1277,34 @@ L_64:
 	LD	BC,(IX+-9)
 	ADD	HL,BC
 	LD	(HL),4
-;  172	            y+=dy;
+;  173	            y+=dy;
 	LD	BC,(_y)
 	LD	A,(IX+9)
 	ADD	A,C
 	LD	(_y),A
-;  173	            x+=dx;
+;  174	            x+=dx;
 	LD	BC,(_x)
 	LD	A,(IX+6)
 	ADD	A,C
 	LD	(_x),A
-;  174	            moves++;
-	LD	A,(_moves)
-	INC	A
-	LD	(_moves),A
-;  175	            push++;
-	LD	A,(_push)
-	INC	A
-	LD	(_push),A
-;  176	            nbCaisseOk++;
+;  175	            moves++;
+	LD	BC,(_moves)
+	INC	BC
+	LD	(_moves),BC
+;  176	            push++;
+	LD	BC,(_push)
+	INC	BC
+	LD	(_push),BC
+;  177	            nbCaisseOk++;
 	LD	A,(_nbCaisseOk)
 	INC	A
 	LD	(_nbCaisseOk),A
-;  177	        }
-;  178	        break;
+;  178	        }
+;  179	        break;
 	JR	L_76
-;  179	    case 4:
+;  180	    case 4:
 L_66:
-;  180	        if(level[nbLvl][y+2*dy][x+2*dx]==1) {
+;  181	        if(level[nbLvl][y+2*dy][x+2*dx]==1) {
 	LD	HL,(IX+9)
 	ADD	HL,HL
 	LD	BC,HL
@@ -1343,7 +1341,7 @@ L_66:
 	LD	BC,1
 	SBC	HL,BC
 	JR	NZ,L_74
-;  181	            level[nbLvl][y+dy][x+dx]=2;
+;  182	            level[nbLvl][y+dy][x+dx]=2;
 	LD	A,(_nbLvl)
 	UEXT	HL
 	LD	L,A
@@ -1356,7 +1354,7 @@ L_66:
 	LD	BC,(IX+-3)
 	ADD	HL,BC
 	LD	(HL),2
-;  182	            level[nbLvl][y+2*dy][x+2*dx]=3;
+;  183	            level[nbLvl][y+2*dy][x+2*dx]=3;
 	LD	A,(_nbLvl)
 	UEXT	HL
 	LD	L,A
@@ -1369,29 +1367,29 @@ L_66:
 	LD	BC,(IX+-15)
 	ADD	HL,BC
 	LD	(HL),3
-;  183	            y+=dy;
+;  184	            y+=dy;
 	LD	BC,(_y)
 	LD	A,(IX+9)
 	ADD	A,C
 	LD	(_y),A
-;  184	            x+=dx;
+;  185	            x+=dx;
 	LD	BC,(_x)
 	LD	A,(IX+6)
 	ADD	A,C
 	LD	(_x),A
-;  185	            moves++;
-	LD	A,(_moves)
-	INC	A
-	LD	(_moves),A
-;  186	            push++;
-	LD	A,(_push)
-	INC	A
-	LD	(_push),A
-;  187	            nbCaisseOk--;
+;  186	            moves++;
+	LD	BC,(_moves)
+	INC	BC
+	LD	(_moves),BC
+;  187	            push++;
+	LD	BC,(_push)
+	INC	BC
+	LD	(_push),BC
+;  188	            nbCaisseOk--;
 	LD	A,(_nbCaisseOk)
 	DEC	A
 	LD	(_nbCaisseOk),A
-;  188	        } else if(level[nbLvl][y+2*dy][x+2*dx]==2) {
+;  189	        } else if(level[nbLvl][y+2*dy][x+2*dx]==2) {
 	JR	L_76
 L_74:
 	LD	A,(_nbLvl)
@@ -1412,7 +1410,7 @@ L_74:
 	LD	BC,2
 	SBC	HL,BC
 	JR	NZ,L_76
-;  189	            level[nbLvl][y+dy][x+dx]=2;
+;  190	            level[nbLvl][y+dy][x+dx]=2;
 	LD	A,(_nbLvl)
 	UEXT	HL
 	LD	L,A
@@ -1425,7 +1423,7 @@ L_74:
 	LD	BC,(IX+-3)
 	ADD	HL,BC
 	LD	(HL),2
-;  190	            level[nbLvl][y+2*dy][x+2*dx]=4;
+;  191	            level[nbLvl][y+2*dy][x+2*dx]=4;
 	LD	A,(_nbLvl)
 	UEXT	HL
 	LD	L,A
@@ -1438,28 +1436,28 @@ L_74:
 	LD	BC,(IX+-15)
 	ADD	HL,BC
 	LD	(HL),4
-;  191	            y+=dy;
+;  192	            y+=dy;
 	LD	BC,(_y)
 	LD	A,(IX+9)
 	ADD	A,C
 	LD	(_y),A
-;  192	            x+=dx;
+;  193	            x+=dx;
 	LD	BC,(_x)
 	LD	A,(IX+6)
 	ADD	A,C
 	LD	(_x),A
-;  193	            moves++;
-	LD	A,(_moves)
-	INC	A
-	LD	(_moves),A
-;  194	            push++;
-	LD	A,(_push)
-	INC	A
-	LD	(_push),A
-;  195	        }
-;  196	        break;
-;  197	    }
-;  198	}
+;  194	            moves++;
+	LD	BC,(_moves)
+	INC	BC
+	LD	(_moves),BC
+;  195	            push++;
+	LD	BC,(_push)
+	INC	BC
+	LD	(_push),BC
+;  196	        }
+;  197	        break;
+;  198	    }
+;  199	}
 L_76:
 	LD	SP,IX
 	POP	IX
@@ -1469,8 +1467,8 @@ L_76:
 ;**************************** _colide ***************************
 ;Name                         Addr/Register   Size   Type
 ;_nbCaisseOk                         STATIC      1   variable
-;_push                               STATIC      1   variable
-;_moves                              STATIC      1   variable
+;_push                               STATIC      3   variable
+;_moves                              STATIC      3   variable
 ;_nbLvl                              STATIC      1   variable
 ;_level                              STATIC  15000   variable
 ;_x                                  STATIC      1   variable
@@ -1489,15 +1487,15 @@ L_76:
 ;       Spill Code: 0 (instruction)
 
 
-;  199	
-;  200	void check_victory() {
+;  200	
+;  201	void check_victory() {
 _check_victory:
-;  201	    if(nbCaisseOk==nbObj) {
+;  202	    if(nbCaisseOk==nbObj) {
 	LD	A,(_nbCaisseOk)
 	LD	HL,_nbObj
 	CP	A,(HL)
 	JR	NZ,L_84
-;  202	        if(nbLvl+1<50) {
+;  203	        if(nbLvl+1<50) {
 	LD	A,(_nbLvl)
 	UEXT	HL
 	LD	L,A
@@ -1506,11 +1504,7 @@ _check_victory:
 	LD	BC,50
 	SBC	HL,BC
 	JP	P,L_82
-;  203	            Moves[nbLvl]=moves;
-	LD	A,(_moves)
-	UEXT	HL
-	LD	L,A
-	LD	DE,HL
+;  204	            Moves[nbLvl]=moves;
 	LD	A,(_nbLvl)
 	UEXT	HL
 	LD	L,A
@@ -1519,12 +1513,9 @@ _check_victory:
 	ADD	HL,BC
 	LD	BC,_Moves
 	ADD	HL,BC
-	LD	(HL),DE
-;  204	            Pushs[nbLvl]=push;
-	LD	A,(_push)
-	UEXT	HL
-	LD	L,A
-	LD	DE,HL
+	LD	BC,(_moves)
+	LD	(HL),BC
+;  205	            Pushs[nbLvl]=push;
 	LD	A,(_nbLvl)
 	UEXT	HL
 	LD	L,A
@@ -1533,12 +1524,13 @@ _check_victory:
 	ADD	HL,BC
 	LD	BC,_Pushs
 	ADD	HL,BC
-	LD	(HL),DE
-;  205	            nbLvl++;
+	LD	BC,(_push)
+	LD	(HL),BC
+;  206	            nbLvl++;
 	LD	A,(_nbLvl)
 	INC	A
 	LD	(_nbLvl),A
-;  206	            if(nbLvl>maxLvl) maxLvl=nbLvl;
+;  207	            if(nbLvl>maxLvl) maxLvl=nbLvl;
 	LD	A,(_maxLvl)
 	LD	HL,_nbLvl
 	CP	A,(HL)
@@ -1546,15 +1538,15 @@ _check_victory:
 	LD	A,(_nbLvl)
 	LD	(_maxLvl),A
 L_79:
-;  207	            FadeOut();
+;  208	            FadeOut();
 	CALL	_FadeOut
-;  208	            generate();
+;  209	            generate();
 	CALL	_generate
-;  209	            render();
+;  210	            render();
 	CALL	_render
-;  210	            FadeIn();
+;  211	            FadeIn();
 	CALL	_FadeIn
-;  211	        } else if(nbLvl+1==50) {
+;  212	        } else if(nbLvl+1==50) {
 	JR	L_84
 L_82:
 	LD	A,(_nbLvl)
@@ -1564,11 +1556,11 @@ L_82:
 	OR	A,A
 	SBC	HL,BC
 	JR	NZ,L_84
-;  212	            endGame();
+;  213	            endGame();
 	CALL	_endGame
-;  213	        }
-;  214	    }
-;  215	}
+;  214	        }
+;  215	    }
+;  216	}
 L_84:
 	RET	
 
@@ -1582,9 +1574,9 @@ L_84:
 ;_FadeOut                            IMPORT  -----   function
 ;_maxLvl                             STATIC      1   variable
 ;_Pushs                              STATIC    150   variable
-;_push                               STATIC      1   variable
+;_push                               STATIC      3   variable
 ;_Moves                              STATIC    150   variable
-;_moves                              STATIC      1   variable
+;_moves                              STATIC      3   variable
 ;_nbLvl                              STATIC      1   variable
 ;_nbObj                              STATIC      1   variable
 ;_nbCaisseOk                         STATIC      1   variable
@@ -1594,19 +1586,19 @@ L_84:
 ;       Spill Code: 0 (instruction)
 
 
-;  216	
-;  217	void draw_background(bool boolean) {
+;  217	
+;  218	void draw_background(bool boolean) {
 _draw_background:
 	LD	HL,-5
 	CALL	__frameset
-;  218	    uint8_t a, yy,l;
-;  219	    uint16_t xx;
-;  220	    gfx_FillScreen(0xAF);
+;  219	    uint8_t a, yy,l;
+;  220	    uint16_t xx;
+;  221	    gfx_FillScreen(0xAF);
 	LD	BC,175
 	PUSH	BC
 	CALL	_gfx_FillScreen
 	POP	BC
-;  221	    gfx_SetColor(0x03); gfx_FillCircle(160,240,170);
+;  222	    gfx_SetColor(0x03); gfx_FillCircle(160,240,170);
 	LD	BC,3
 	PUSH	BC
 	CALL	_gfx_SetColor
@@ -1621,7 +1613,7 @@ _draw_background:
 	POP	BC
 	POP	BC
 	POP	BC
-;  222	    gfx_SetColor(0x11); gfx_FillCircle(160,240,140);
+;  223	    gfx_SetColor(0x11); gfx_FillCircle(160,240,140);
 	LD	BC,17
 	PUSH	BC
 	CALL	_gfx_SetColor
@@ -1636,7 +1628,7 @@ _draw_background:
 	POP	BC
 	POP	BC
 	POP	BC
-;  223	    gfx_SetColor(0x3F); gfx_FillCircle(160,240,110);
+;  224	    gfx_SetColor(0x3F); gfx_FillCircle(160,240,110);
 	LD	BC,63
 	PUSH	BC
 	CALL	_gfx_SetColor
@@ -1651,7 +1643,7 @@ _draw_background:
 	POP	BC
 	POP	BC
 	POP	BC
-;  224	    gfx_SetColor(0x06); gfx_FillCircle(160,240,90);
+;  225	    gfx_SetColor(0x06); gfx_FillCircle(160,240,90);
 	LD	BC,6
 	PUSH	BC
 	CALL	_gfx_SetColor
@@ -1666,7 +1658,7 @@ _draw_background:
 	POP	BC
 	POP	BC
 	POP	BC
-;  225	    gfx_SetColor(0x32); gfx_FillCircle(160,240,70);
+;  226	    gfx_SetColor(0x32); gfx_FillCircle(160,240,70);
 	LD	BC,50
 	PUSH	BC
 	CALL	_gfx_SetColor
@@ -1681,7 +1673,7 @@ _draw_background:
 	POP	BC
 	POP	BC
 	POP	BC
-;  226	    gfx_SetColor(0x28); gfx_FillCircle(160,240,50);
+;  227	    gfx_SetColor(0x28); gfx_FillCircle(160,240,50);
 	LD	BC,40
 	PUSH	BC
 	CALL	_gfx_SetColor
@@ -1696,16 +1688,16 @@ _draw_background:
 	POP	BC
 	POP	BC
 	POP	BC
-;  227	    gfx_SetColor(0x0E);
+;  228	    gfx_SetColor(0x0E);
 	LD	BC,14
 	PUSH	BC
 	CALL	_gfx_SetColor
 	POP	BC
-;  228	    for(a=0; a<randInt(70,90); a++) {
+;  229	    for(a=0; a<randInt(70,90); a++) {
 	LD	(IX+-1),0
 	JR	L_88
 L_86:
-;  229	        xx=randInt(0,320); yy=randInt(0,100); l=randInt(1,2);
+;  230	        xx=randInt(0,320); yy=randInt(0,100); l=randInt(1,2);
 	CALL	_random
 	LD	BC,321
 	CALL	__iremu
@@ -1722,7 +1714,7 @@ L_86:
 	LD	L,A
 	INC	HL
 	LD	(IX+-2),L
-;  230	        gfx_FillRectangle(xx,yy,l,l);
+;  231	        gfx_FillRectangle(xx,yy,l,l);
 	LD	A,(IX+-2)
 	UEXT	HL
 	LD	L,A
@@ -1744,7 +1736,7 @@ L_86:
 	POP	BC
 	POP	BC
 	INC	(IX+-1)
-;  231	    }
+;  232	    }
 L_88:
 	CALL	_random
 	LD	BC,21
@@ -1757,11 +1749,11 @@ L_88:
 	LEA	BC,IY+70
 	SBC	HL,BC
 	JR	C,L_86
-;  232	    if(boolean) {
+;  233	    if(boolean) {
 	LD	A,(IX+6)
 	OR	A,A
 	JR	Z,L_91
-;  233	        gfx_ScaledTransparentSprite_NoClip(chicken_down,140,102,2,2);
+;  234	        gfx_ScaledTransparentSprite_NoClip(chicken_down,140,102,2,2);
 	LD	BC,2
 	PUSH	BC
 	PUSH	BC
@@ -1777,7 +1769,7 @@ L_88:
 	POP	BC
 	POP	BC
 	POP	BC
-;  234	        print_string_centered("THE CHICKEN ADVENTURE I", 50);
+;  235	        print_string_centered("THE CHICKEN ADVENTURE I", 50);
 	LD	BC,50
 	PUSH	BC
 	LD	BC,L__44
@@ -1785,8 +1777,8 @@ L_88:
 	CALL	_print_string_centered
 	POP	BC
 	POP	BC
-;  235	    }
-;  236	}
+;  236	    }
+;  237	}
 L_91:
 	LD	SP,IX
 	POP	IX
@@ -1819,16 +1811,16 @@ L__44:
 	DB	"THE CHICKEN ADVENTURE I"
 	DB	0
 	SEGMENT CODE
-;  237	
-;  238	void draw_menu(uint8_t yPos) {
+;  238	
+;  239	void draw_menu(uint8_t yPos) {
 _draw_menu:
 	CALL	__frameset0
-;  239	    draw_background(true);
+;  240	    draw_background(true);
 	LD	BC,1
 	PUSH	BC
 	CALL	_draw_background
 	POP	BC
-;  240	    gfx_SetColor(0x00); gfx_FillRectangle(95,yPos+2,8,2);
+;  241	    gfx_SetColor(0x00); gfx_FillRectangle(95,yPos+2,8,2);
 	LD	BC,0
 	PUSH	BC
 	CALL	_gfx_SetColor
@@ -1850,7 +1842,7 @@ _draw_menu:
 	POP	BC
 	POP	BC
 	POP	BC
-;  241	    print_string_centered("Continuer",140);
+;  242	    print_string_centered("Continuer",140);
 	LD	BC,140
 	PUSH	BC
 	LD	BC,L__46
@@ -1858,7 +1850,7 @@ _draw_menu:
 	CALL	_print_string_centered
 	POP	BC
 	POP	BC
-;  242	    gfx_PrintStringXY("<      >", 210,140);
+;  243	    gfx_PrintStringXY("<      >", 210,140);
 	LD	BC,140
 	PUSH	BC
 	LD	BC,210
@@ -1869,7 +1861,7 @@ _draw_menu:
 	POP	BC
 	POP	BC
 	POP	BC
-;  243	    gfx_SetTextXY((gfx_lcdWidth/2)+gfx_GetStringWidth("Continuer")-10,140);
+;  244	    gfx_SetTextXY((gfx_lcdWidth/2)+gfx_GetStringWidth("Continuer")-10,140);
 	LD	BC,140
 	PUSH	BC
 	LD	BC,L__48
@@ -1882,7 +1874,7 @@ _draw_menu:
 	CALL	_gfx_SetTextXY
 	POP	BC
 	POP	BC
-;  244	    gfx_PrintUInt(nbLvl+1, 2);
+;  245	    gfx_PrintUInt(nbLvl+1, 2);
 	LD	A,(_nbLvl)
 	UEXT	HL
 	LD	L,A
@@ -1893,7 +1885,7 @@ _draw_menu:
 	CALL	_gfx_PrintUInt
 	POP	BC
 	POP	BC
-;  245	    print_string_centered("Nouvelle partie",160);
+;  246	    print_string_centered("Nouvelle partie",160);
 	LD	BC,160
 	PUSH	BC
 	LD	BC,L__49
@@ -1901,7 +1893,7 @@ _draw_menu:
 	CALL	_print_string_centered
 	POP	BC
 	POP	BC
-;  246	    print_string_centered("Stats",180);
+;  247	    print_string_centered("Stats",180);
 	LD	BC,180
 	PUSH	BC
 	LD	BC,L__50
@@ -1909,7 +1901,7 @@ _draw_menu:
 	CALL	_print_string_centered
 	POP	BC
 	POP	BC
-;  247	    print_string_centered("Quitter",200);
+;  248	    print_string_centered("Quitter",200);
 	LD	BC,200
 	PUSH	BC
 	LD	BC,L__51
@@ -1917,9 +1909,9 @@ _draw_menu:
 	CALL	_print_string_centered
 	POP	BC
 	POP	BC
-;  248	    gfx_SwapDraw();
+;  249	    gfx_SwapDraw();
 	CALL	_gfx_SwapDraw
-;  249	}
+;  250	}
 	LD	SP,IX
 	POP	IX
 	RET	
@@ -1964,22 +1956,22 @@ L__51:
 	DB	"Quitter"
 	DB	0
 	SEGMENT CODE
-;  250	
-;  251	void menu() {
+;  251	
+;  252	void menu() {
 _menu:
 	LD	HL,-1
 	CALL	__frameset
-;  252	    uint8_t yPos=140;
+;  253	    uint8_t yPos=140;
 	LD	(IX+-1),140
-;  253	    draw_menu(yPos);
+;  254	    draw_menu(yPos);
 	LD	BC,140
 	PUSH	BC
 	CALL	_draw_menu
 	POP	BC
-;  254	    while (kb_ScanGroup(kb_group_6) != kb_Clear) {
+;  255	    while (kb_ScanGroup(kb_group_6) != kb_Clear) {
 	JR	L_133
 L_134:
-;  255	        switch(kb_ScanGroup(kb_group_7)) {
+;  256	        switch(kb_ScanGroup(kb_group_7)) {
 	LD	BC,7
 	PUSH	BC
 	CALL	_kb_ScanGroup
@@ -1997,28 +1989,28 @@ L__53:
 
 	DW24	L_132	
 
-;  256	        case kb_Down:
+;  257	        case kb_Down:
 L_93:
-;  257	            if(yPos==140) yPos=160;
+;  258	            if(yPos==140) yPos=160;
 	LD	A,(IX+-1)
 	CP	A,140
 	JR	NZ,L_100
 	LD	(IX+-1),160
-;  258	            else if(yPos==160) yPos=180;
+;  259	            else if(yPos==160) yPos=180;
 	JR	L_101
 L_100:
 	LD	A,(IX+-1)
 	CP	A,160
 	JR	NZ,L_98
 	LD	(IX+-1),180
-;  259	            else if(yPos==180) yPos=200;
+;  260	            else if(yPos==180) yPos=200;
 	JR	L_101
 L_98:
 	LD	A,(IX+-1)
 	CP	A,180
 	JR	NZ,L_96
 	LD	(IX+-1),200
-;  260	            else if(yPos==200) yPos=140;
+;  261	            else if(yPos==200) yPos=140;
 	JR	L_101
 L_96:
 	LD	A,(IX+-1)
@@ -2026,36 +2018,36 @@ L_96:
 	JR	NZ,L_101
 	LD	(IX+-1),140
 L_101:
-;  261	            draw_menu(yPos);
+;  262	            draw_menu(yPos);
 	LD	C,(IX+-1)
 	LD	B,0
 	PUSH	BC
 	CALL	_draw_menu
 	POP	BC
-;  262	            break;
+;  263	            break;
 	JR	L_132
-;  263	        case kb_Up:
+;  264	        case kb_Up:
 L_102:
-;  264	            if(yPos==140) yPos=200;
+;  265	            if(yPos==140) yPos=200;
 	LD	A,(IX+-1)
 	CP	A,140
 	JR	NZ,L_109
 	LD	(IX+-1),200
-;  265	            else if(yPos==160) yPos=140;
+;  266	            else if(yPos==160) yPos=140;
 	JR	L_110
 L_109:
 	LD	A,(IX+-1)
 	CP	A,160
 	JR	NZ,L_107
 	LD	(IX+-1),140
-;  266	            else if(yPos==180) yPos=160;
+;  267	            else if(yPos==180) yPos=160;
 	JR	L_110
 L_107:
 	LD	A,(IX+-1)
 	CP	A,180
 	JR	NZ,L_105
 	LD	(IX+-1),160
-;  267	            else if(yPos==200) yPos=180;
+;  268	            else if(yPos==200) yPos=180;
 	JR	L_110
 L_105:
 	LD	A,(IX+-1)
@@ -2063,20 +2055,20 @@ L_105:
 	JR	NZ,L_110
 	LD	(IX+-1),180
 L_110:
-;  268	            draw_menu(yPos);
+;  269	            draw_menu(yPos);
 	LD	C,(IX+-1)
 	LD	B,0
 	PUSH	BC
 	CALL	_draw_menu
 	POP	BC
-;  269	            break;
-;  270	        }
+;  270	            break;
+;  271	        }
 L_132:
-;  271	        if(yPos==140) {
+;  272	        if(yPos==140) {
 	LD	A,(IX+-1)
 	CP	A,140
 	JR	NZ,L_131
-;  272	            if(kb_ScanGroup(kb_group_7)==kb_Left) {
+;  273	            if(kb_ScanGroup(kb_group_7)==kb_Left) {
 	LD	BC,7
 	PUSH	BC
 	CALL	_kb_ScanGroup
@@ -2087,7 +2079,7 @@ L_132:
 	LD	BC,2
 	SBC	HL,BC
 	JR	NZ,L_121
-;  273	                if(nbLvl>0) nbLvl--;
+;  274	                if(nbLvl>0) nbLvl--;
 	XOR	A,A
 	LD	HL,_nbLvl
 	CP	A,(HL)
@@ -2096,13 +2088,13 @@ L_132:
 	DEC	A
 	LD	(_nbLvl),A
 L_113:
-;  274	                draw_menu(yPos);
+;  275	                draw_menu(yPos);
 	LD	C,(IX+-1)
 	LD	B,0
 	PUSH	BC
 	CALL	_draw_menu
 	POP	BC
-;  275	            } else if(kb_ScanGroup(kb_group_7)==kb_Right) {
+;  276	            } else if(kb_ScanGroup(kb_group_7)==kb_Right) {
 	JR	L_133
 L_121:
 	LD	BC,7
@@ -2115,7 +2107,7 @@ L_121:
 	LD	BC,4
 	SBC	HL,BC
 	JR	NZ,L_119
-;  276	                if(nbLvl<maxLvl) nbLvl++;
+;  277	                if(nbLvl<maxLvl) nbLvl++;
 	LD	A,(_nbLvl)
 	LD	HL,_maxLvl
 	CP	A,(HL)
@@ -2124,13 +2116,13 @@ L_121:
 	INC	A
 	LD	(_nbLvl),A
 L_116:
-;  277	                draw_menu(yPos);        
+;  278	                draw_menu(yPos);        
 	LD	C,(IX+-1)
 	LD	B,0
 	PUSH	BC
 	CALL	_draw_menu
 	POP	BC
-;  278	            } else if(kb_ScanGroup(kb_group_6)==kb_Enter) {
+;  279	            } else if(kb_ScanGroup(kb_group_6)==kb_Enter) {
 	JR	L_133
 L_119:
 	LD	BC,6
@@ -2143,16 +2135,16 @@ L_119:
 	LD	BC,1
 	SBC	HL,BC
 	JR	NZ,L_133
-;  279	                game();
+;  280	                game();
 	CALL	_game
-;  280	                draw_menu(yPos);
+;  281	                draw_menu(yPos);
 	LD	C,(IX+-1)
 	LD	B,0
 	PUSH	BC
 	CALL	_draw_menu
 	POP	BC
-;  281	            }
-;  282	        } else if(yPos==160&&kb_ScanGroup(kb_group_6)==kb_Enter) {
+;  282	            }
+;  283	        } else if(yPos==160&&kb_ScanGroup(kb_group_6)==kb_Enter) {
 	JR	L_133
 L_131:
 	LD	A,(IX+-1)
@@ -2168,11 +2160,11 @@ L_131:
 	LD	BC,1
 	SBC	HL,BC
 	JR	NZ,L_129
-;  283	            newGame();
+;  284	            newGame();
 	CALL	_newGame
-;  284	            yPos=140;
+;  285	            yPos=140;
 	LD	(IX+-1),140
-;  285	        } else if(yPos==180&&kb_ScanGroup(kb_group_6)==kb_Enter) {
+;  286	        } else if(yPos==180&&kb_ScanGroup(kb_group_6)==kb_Enter) {
 	JR	L_133
 L_129:
 	LD	A,(IX+-1)
@@ -2188,19 +2180,19 @@ L_129:
 	LD	BC,1
 	SBC	HL,BC
 	JR	NZ,L_127
-;  286	            draw_Stats(0);
+;  287	            draw_Stats(0);
 	LD	BC,0
 	PUSH	BC
 	CALL	_draw_Stats
 	POP	BC
-;  287	            yPos=140;
+;  288	            yPos=140;
 	LD	(IX+-1),140
-;  288	            draw_menu(yPos);
+;  289	            draw_menu(yPos);
 	LD	BC,140
 	PUSH	BC
 	CALL	_draw_menu
 	POP	BC
-;  289	        } else if(yPos==200&&kb_ScanGroup(kb_group_6)==kb_Enter) {break;}
+;  290	        } else if(yPos==200&&kb_ScanGroup(kb_group_6)==kb_Enter) {break;}
 	JR	L_133
 L_127:
 	LD	A,(IX+-1)
@@ -2216,7 +2208,7 @@ L_127:
 	LD	BC,1
 	SBC	HL,BC
 	JR	Z,L_135
-;  290	    }
+;  291	    }
 L_133:
 	LD	BC,6
 	PUSH	BC
@@ -2228,7 +2220,7 @@ L_133:
 	LD	BC,64
 	SBC	HL,BC
 	JR	NZ,L_134
-;  291	}
+;  292	}
 L_135:
 	LD	SP,IX
 	POP	IX
@@ -2251,33 +2243,33 @@ L_135:
 ;       Spill Code: 0 (instruction)
 
 
-;  292	
-;  293	void draw_Stats(uint8_t page) {
+;  293	
+;  294	void draw_Stats(uint8_t page) {
 _draw_Stats:
 	LD	HL,-12
 	CALL	__frameset
-;  294	    uint8_t i, f=page*15, g=0;
+;  295	    uint8_t i, f=page*15, g=0;
 	LD	B,15
 	LD	C,(IX+6)
 	MLT	BC
 	LD	(IX+-3),C
-;  295	    draw_background(false);
+;  296	    draw_background(false);
 	LD	BC,0
 	PUSH	BC
 	CALL	_draw_background
 	POP	BC
-;  296	    for(i=0; i<15;i++) {
+;  297	    for(i=0; i<15;i++) {
 	LD	(IX+-1),0
 	JR	L_144
 L_142:
-;  297	        g=i+f;
+;  298	        g=i+f;
 	LD	A,(IX+-1)
 	ADD	A,(IX+-3)
 	LD	(IX+-2),A
-;  298	        if(g==50) break;
+;  299	        if(g==50) break;
 	CP	A,50
 	JR	Z,L_145
-;  299	        gfx_PrintStringXY("Level: ",0,i*15);
+;  300	        gfx_PrintStringXY("Level: ",0,i*15);
 	LD	A,(IX+-1)
 	UEXT	HL
 	LD	L,A
@@ -2292,7 +2284,7 @@ L_142:
 	POP	BC
 	POP	BC
 	POP	BC
-;  300	        gfx_SetTextXY(50,i*15);
+;  301	        gfx_SetTextXY(50,i*15);
 	LD	A,(IX+-1)
 	UEXT	HL
 	LD	L,A
@@ -2304,7 +2296,7 @@ L_142:
 	CALL	_gfx_SetTextXY
 	POP	BC
 	POP	BC
-;  301	        gfx_PrintUInt(g+1, 2);
+;  302	        gfx_PrintUInt(g+1, 2);
 	LD	BC,2
 	PUSH	BC
 	LD	A,(IX+-2)
@@ -2315,7 +2307,7 @@ L_142:
 	CALL	_gfx_PrintUInt
 	POP	BC
 	POP	BC
-;  302	        gfx_PrintStringXY("Moves: ", 80,i*15);
+;  303	        gfx_PrintStringXY("Moves: ", 80,i*15);
 	LD	A,(IX+-1)
 	UEXT	HL
 	LD	L,A
@@ -2330,7 +2322,7 @@ L_142:
 	POP	BC
 	POP	BC
 	POP	BC
-;  303	        if(Moves[g]!=0) {
+;  304	        if(Moves[g]!=0) {
 	LD	A,(IX+-2)
 	UEXT	HL
 	LD	L,A
@@ -2344,7 +2336,7 @@ L_142:
 	LD	HL,(HL)
 	CALL	__icmpzero
 	JR	Z,L_140
-;  304	            gfx_SetTextXY(140,i*15);
+;  305	            gfx_SetTextXY(140,i*15);
 	LD	A,(IX+-1)
 	UEXT	HL
 	LD	L,A
@@ -2356,7 +2348,7 @@ L_142:
 	CALL	_gfx_SetTextXY
 	POP	BC
 	POP	BC
-;  305	            gfx_PrintUInt(Moves[g], 5);
+;  306	            gfx_PrintUInt(Moves[g], 5);
 	LD	BC,5
 	PUSH	BC
 	LD	HL,(IX+-12)
@@ -2365,9 +2357,9 @@ L_142:
 	CALL	_gfx_PrintUInt
 	POP	BC
 	POP	BC
-;  306	        }
+;  307	        }
 L_140:
-;  307	        gfx_PrintStringXY("Pushs: ", 190, i*15);
+;  308	        gfx_PrintStringXY("Pushs: ", 190, i*15);
 	LD	A,(IX+-1)
 	UEXT	HL
 	LD	L,A
@@ -2382,7 +2374,7 @@ L_140:
 	POP	BC
 	POP	BC
 	POP	BC
-;  308	        if(Pushs[g]!=0) {
+;  309	        if(Pushs[g]!=0) {
 	LD	BC,(IX+-9)
 	LD	HL,_Pushs
 	ADD	HL,BC
@@ -2390,7 +2382,7 @@ L_140:
 	LD	HL,(HL)
 	CALL	__icmpzero
 	JR	Z,L_143
-;  309	            gfx_SetTextXY(250, i*15);
+;  310	            gfx_SetTextXY(250, i*15);
 	LD	A,(IX+-1)
 	UEXT	HL
 	LD	L,A
@@ -2402,7 +2394,7 @@ L_140:
 	CALL	_gfx_SetTextXY
 	POP	BC
 	POP	BC
-;  310	            gfx_PrintUInt(Pushs[g],5);
+;  311	            gfx_PrintUInt(Pushs[g],5);
 	LD	BC,5
 	PUSH	BC
 	LD	HL,(IX+-6)
@@ -2411,8 +2403,8 @@ L_140:
 	CALL	_gfx_PrintUInt
 	POP	BC
 	POP	BC
-;  311	        }
-;  312	    }
+;  312	        }
+;  313	    }
 L_143:
 	INC	(IX+-1)
 L_144:
@@ -2420,7 +2412,7 @@ L_144:
 	CP	A,15
 	JR	C,L_142
 L_145:
-;  313	    print_string_centered("[<>]-deplacer [Del]-retour",230);
+;  314	    print_string_centered("[<>]-deplacer [Del]-retour",230);
 	LD	BC,230
 	PUSH	BC
 	LD	BC,L__83
@@ -2428,12 +2420,12 @@ L_145:
 	CALL	_print_string_centered
 	POP	BC
 	POP	BC
-;  314	    gfx_SwapDraw();
+;  315	    gfx_SwapDraw();
 	CALL	_gfx_SwapDraw
-;  315	    while(kb_ScanGroup(kb_group_1)!=kb_Del) {
+;  316	    while(kb_ScanGroup(kb_group_1)!=kb_Del) {
 	JR	L_153
 L_154:
-;  316	        if(kb_ScanGroup(kb_group_7)==kb_Left) {
+;  317	        if(kb_ScanGroup(kb_group_7)==kb_Left) {
 	LD	BC,7
 	PUSH	BC
 	CALL	_kb_ScanGroup
@@ -2444,7 +2436,7 @@ L_154:
 	LD	BC,2
 	SBC	HL,BC
 	JR	NZ,L_152
-;  317	            if(page!=0) draw_Stats(--page);
+;  318	            if(page!=0) draw_Stats(--page);
 	LD	A,(IX+6)
 	OR	A,A
 	JR	Z,L_147
@@ -2454,14 +2446,14 @@ L_154:
 	PUSH	BC
 	CALL	_draw_Stats
 	POP	BC
-;  318	            else draw_Stats(3);
+;  319	            else draw_Stats(3);
 	JR	L_153
 L_147:
 	LD	BC,3
 	PUSH	BC
 	CALL	_draw_Stats
 	POP	BC
-;  319	        } else if(kb_ScanGroup(kb_group_7)==kb_Right) {
+;  320	        } else if(kb_ScanGroup(kb_group_7)==kb_Right) {
 	JR	L_153
 L_152:
 	LD	BC,7
@@ -2474,7 +2466,7 @@ L_152:
 	LD	BC,4
 	SBC	HL,BC
 	JR	NZ,L_153
-;  320	            if(page!=3) draw_Stats(++page);
+;  321	            if(page!=3) draw_Stats(++page);
 	LD	A,(IX+6)
 	CP	A,3
 	JR	Z,L_149
@@ -2484,15 +2476,15 @@ L_152:
 	PUSH	BC
 	CALL	_draw_Stats
 	POP	BC
-;  321	            else draw_Stats(0);
+;  322	            else draw_Stats(0);
 	JR	L_153
 L_149:
 	LD	BC,0
 	PUSH	BC
 	CALL	_draw_Stats
 	POP	BC
-;  322	        }
-;  323	    }
+;  323	        }
+;  324	    }
 L_153:
 	LD	BC,1
 	PUSH	BC
@@ -2504,7 +2496,7 @@ L_153:
 	LD	BC,128
 	SBC	HL,BC
 	JR	NZ,L_154
-;  324	}
+;  325	}
 	LD	SP,IX
 	POP	IX
 	RET	
@@ -2548,32 +2540,32 @@ L__83:
 	DB	"[<>]-deplacer [Del]-retour"
 	DB	0
 	SEGMENT CODE
-;  325	
-;  326	void game() {
+;  326	
+;  327	void game() {
 _game:
-;  327	    generate();
+;  328	    generate();
 	CALL	_generate
-;  328	    render();
+;  329	    render();
 	CALL	_render
-;  329	    while(kb_ScanGroup(kb_group_1) != kb_Del) {
+;  330	    while(kb_ScanGroup(kb_group_1) != kb_Del) {
 	JR	L_159
 L_160:
-;  330	        nopwait(30000);
+;  331	        nopwait(30000);
 	LD	BC,30000
 	PUSH	BC
 	CALL	_nopwait
 	POP	BC
-;  331	        update();
+;  332	        update();
 	CALL	_update
-;  332	        render();
+;  333	        render();
 	CALL	_render
-;  333	        check_victory();
+;  334	        check_victory();
 	CALL	_check_victory
-;  334	        if(nbLvl==50) break;
+;  335	        if(nbLvl==50) break;
 	LD	A,(_nbLvl)
 	CP	A,50
 	JR	Z,L_161
-;  335	        if(kb_ScanGroup(kb_group_1)==kb_2nd) {
+;  336	        if(kb_ScanGroup(kb_group_1)==kb_2nd) {
 	LD	BC,1
 	PUSH	BC
 	CALL	_kb_ScanGroup
@@ -2584,12 +2576,12 @@ L_160:
 	LD	BC,32
 	SBC	HL,BC
 	JR	NZ,L_159
-;  336	            generate();
+;  337	            generate();
 	CALL	_generate
-;  337	            render();
+;  338	            render();
 	CALL	_render
-;  338	        }
-;  339	    }
+;  339	        }
+;  340	    }
 L_159:
 	LD	BC,1
 	PUSH	BC
@@ -2602,12 +2594,12 @@ L_159:
 	SBC	HL,BC
 	JR	NZ,L_160
 L_161:
-;  340	    draw_menu(140);
+;  341	    draw_menu(140);
 	LD	BC,140
 	PUSH	BC
 	CALL	_draw_menu
 	POP	BC
-;  341	}
+;  342	}
 	RET	
 
 
@@ -2627,19 +2619,19 @@ L_161:
 ;       Spill Code: 0 (instruction)
 
 
-;  342	
-;  343	void newGame() {
+;  343	
+;  344	void newGame() {
 _newGame:
 	LD	HL,-3
 	CALL	__frameset
-;  344	    ti_var_t file;
-;  345	    uint8_t a,b;
-;  346	    nbLvl=0;
+;  345	    ti_var_t file;
+;  346	    uint8_t a,b;
+;  347	    nbLvl=0;
 	XOR	A,A
 	LD	(_nbLvl),A
-;  347	    ti_CloseAll();
+;  348	    ti_CloseAll();
 	CALL	_ti_CloseAll
-;  348	    file = ti_Open("CHKNSV", "w");
+;  349	    file = ti_Open("CHKNSV", "w");
 	LD	BC,L__94
 	PUSH	BC
 	LD	BC,L__95
@@ -2648,7 +2640,7 @@ _newGame:
 	POP	BC
 	POP	BC
 	LD	(IX+-3),A
-;  349	    if(file)ti_Write(&nbLvl, sizeof(uint24_t), sizeof(nbLvl)/sizeof(uint24_t), file);
+;  350	    if(file)ti_Write(&nbLvl, sizeof(uint24_t), sizeof(nbLvl)/sizeof(uint24_t), file);
 	OR	A,A
 	JR	Z,L_164
 	LD	C,(IX+-3)
@@ -2666,12 +2658,12 @@ _newGame:
 	POP	BC
 	POP	BC
 L_164:
-;  350	    gfx_SetColor(0x09);
+;  351	    gfx_SetColor(0x09);
 	LD	BC,9
 	PUSH	BC
 	CALL	_gfx_SetColor
 	POP	BC
-;  351	    gfx_FillRectangle(0,0,320,240);
+;  352	    gfx_FillRectangle(0,0,320,240);
 	LD	BC,240
 	PUSH	BC
 	LD	BC,320
@@ -2684,7 +2676,7 @@ L_164:
 	POP	BC
 	POP	BC
 	POP	BC
-;  352	    gfx_ScaledTransparentSprite_NoClip(intro,0,0,2,2);
+;  353	    gfx_ScaledTransparentSprite_NoClip(intro,0,0,2,2);
 	LD	BC,2
 	PUSH	BC
 	PUSH	BC
@@ -2699,7 +2691,7 @@ L_164:
 	POP	BC
 	POP	BC
 	POP	BC
-;  353	    print_string_centered("En l'an 0, la lune s'ecrasa sur Terre apres",200);
+;  354	    print_string_centered("En l'an 0, la lune s'ecrasa sur Terre apres",200);
 	LD	BC,200
 	PUSH	BC
 	LD	BC,L__97
@@ -2707,7 +2699,7 @@ L_164:
 	CALL	_print_string_centered
 	POP	BC
 	POP	BC
-;  354	    print_string_centered("s'etre fait posseder par Super Poulet.",210);
+;  355	    print_string_centered("s'etre fait posseder par Super Poulet.",210);
 	LD	BC,210
 	PUSH	BC
 	LD	BC,L__98
@@ -2715,7 +2707,7 @@ L_164:
 	CALL	_print_string_centered
 	POP	BC
 	POP	BC
-;  355	    print_string_centered("Les humains furent convertis en poulet...",220);
+;  356	    print_string_centered("Les humains furent convertis en poulet...",220);
 	LD	BC,220
 	PUSH	BC
 	LD	BC,L__99
@@ -2723,14 +2715,14 @@ L_164:
 	CALL	_print_string_centered
 	POP	BC
 	POP	BC
-;  356	    gfx_SwapDraw();
+;  357	    gfx_SwapDraw();
 	CALL	_gfx_SwapDraw
-;  357	    while(!os_GetCSC());
+;  358	    while(!os_GetCSC());
 L_166:
 	CALL	_os_GetCSC
 	OR	A,A
 	JR	Z,L_166
-;  358	    gfx_FillRectangle(0,0,320,240);
+;  359	    gfx_FillRectangle(0,0,320,240);
 	LD	BC,240
 	PUSH	BC
 	LD	BC,320
@@ -2743,15 +2735,15 @@ L_166:
 	POP	BC
 	POP	BC
 	POP	BC
-;  359	    for(a=1; a*28<292; a++) {
+;  360	    for(a=1; a*28<292; a++) {
 	LD	(IX+-1),1
 	JR	L_174
 L_172:
-;  360	        for(b=0; b*28<160; b+=2) {
+;  361	        for(b=0; b*28<160; b+=2) {
 	LD	(IX+-2),0
 	JR	L_171
 L_169:
-;  361	            gfx_ScaledTransparentSprite_NoClip(doctor_chicken,a*28,b*28,4,4);
+;  362	            gfx_ScaledTransparentSprite_NoClip(doctor_chicken,a*28,b*28,4,4);
 	LD	B,28
 	LD	DE,4
 	PUSH	DE
@@ -2774,7 +2766,7 @@ L_169:
 	POP	BC
 	POP	BC
 	POP	BC
-;  362	            gfx_ScaledTransparentSprite_NoClip(doctor_chicken,a*28-17,b*28+28,4,4);
+;  363	            gfx_ScaledTransparentSprite_NoClip(doctor_chicken,a*28-17,b*28+28,4,4);
 	LD	B,28
 	LD	DE,4
 	PUSH	DE
@@ -2804,7 +2796,7 @@ L_169:
 	POP	BC
 	INC	(IX+-2)
 	INC	(IX+-2)
-;  363	        }
+;  364	        }
 L_171:
 	LD	A,(IX+-2)
 	UEXT	HL
@@ -2816,7 +2808,7 @@ L_171:
 	SBC	HL,BC
 	JP	M,L_169
 	INC	(IX+-1)
-;  364	    }
+;  365	    }
 L_174:
 	LD	A,(IX+-1)
 	UEXT	HL
@@ -2828,7 +2820,7 @@ L_174:
 	SBC	HL,BC
 	CALL	__setflag
 	JP	M,L_172
-;  365	    print_string_centered("En 93632 apSP, les chercheurs poulets ont",200);
+;  366	    print_string_centered("En 93632 apSP, les chercheurs poulets ont",200);
 	LD	BC,200
 	PUSH	BC
 	LD	BC,L__103
@@ -2836,7 +2828,7 @@ L_174:
 	CALL	_print_string_centered
 	POP	BC
 	POP	BC
-;  366	    print_string_centered("trouve le moyen de revenir a leur etat",210);
+;  367	    print_string_centered("trouve le moyen de revenir a leur etat",210);
 	LD	BC,210
 	PUSH	BC
 	LD	BC,L__104
@@ -2844,7 +2836,7 @@ L_174:
 	CALL	_print_string_centered
 	POP	BC
 	POP	BC
-;  367	    print_string_centered("naturel. Il faut qu'ils rangent des caisses...",220);
+;  368	    print_string_centered("naturel. Il faut qu'ils rangent des caisses...",220);
 	LD	BC,220
 	PUSH	BC
 	LD	BC,L__105
@@ -2852,16 +2844,16 @@ L_174:
 	CALL	_print_string_centered
 	POP	BC
 	POP	BC
-;  368	    gfx_SwapDraw();
+;  369	    gfx_SwapDraw();
 	CALL	_gfx_SwapDraw
-;  369	    while(!os_GetCSC());
+;  370	    while(!os_GetCSC());
 L_177:
 	CALL	_os_GetCSC
 	OR	A,A
 	JR	Z,L_177
-;  370	    game();
+;  371	    game();
 	CALL	_game
-;  371	}
+;  372	}
 	LD	SP,IX
 	POP	IX
 	RET	
@@ -2917,15 +2909,15 @@ L__105:
 	DB	"naturel. Il faut qu'ils rangent des caisses..."
 	DB	0
 	SEGMENT CODE
-;  372	
-;  373	void endGame() {
+;  373	
+;  374	void endGame() {
 _endGame:
-;  374	    draw_background(true);
+;  375	    draw_background(true);
 	LD	BC,1
 	PUSH	BC
 	CALL	_draw_background
 	POP	BC
-;  375	    print_string_centered("Apres plusieurs mois de rangement intense,",120);
+;  376	    print_string_centered("Apres plusieurs mois de rangement intense,",120);
 	LD	BC,120
 	PUSH	BC
 	LD	BC,L__108
@@ -2933,7 +2925,7 @@ _endGame:
 	CALL	_print_string_centered
 	POP	BC
 	POP	BC
-;  376	    print_string_centered("Super Poulet partit, effraye par ce rangement!",140);
+;  377	    print_string_centered("Super Poulet partit, effraye par ce rangement!",140);
 	LD	BC,140
 	PUSH	BC
 	LD	BC,L__109
@@ -2941,7 +2933,7 @@ _endGame:
 	CALL	_print_string_centered
 	POP	BC
 	POP	BC
-;  377	    print_string_centered("Les poulets furent convertis en humains...",160);
+;  378	    print_string_centered("Les poulets furent convertis en humains...",160);
 	LD	BC,160
 	PUSH	BC
 	LD	BC,L__110
@@ -2949,7 +2941,7 @@ _endGame:
 	CALL	_print_string_centered
 	POP	BC
 	POP	BC
-;  378	    print_string_centered("Merci d'avoir joue!",200);
+;  379	    print_string_centered("Merci d'avoir joue!",200);
 	LD	BC,200
 	PUSH	BC
 	LD	BC,L__111
@@ -2957,7 +2949,7 @@ _endGame:
 	CALL	_print_string_centered
 	POP	BC
 	POP	BC
-;  379	    print_string_centered("A suivre...",230);
+;  380	    print_string_centered("A suivre...",230);
 	LD	BC,230
 	PUSH	BC
 	LD	BC,L__112
@@ -2965,25 +2957,25 @@ _endGame:
 	CALL	_print_string_centered
 	POP	BC
 	POP	BC
-;  380	    gfx_SwapDraw();
+;  381	    gfx_SwapDraw();
 	CALL	_gfx_SwapDraw
-;  381	    while(!os_GetCSC());
+;  382	    while(!os_GetCSC());
 L_181:
 	CALL	_os_GetCSC
 	OR	A,A
 	JR	Z,L_181
-;  382	    if(nbLvl!=50) {
+;  383	    if(nbLvl!=50) {
 	LD	A,(_nbLvl)
 	CP	A,50
 	JR	Z,L_185
-;  383	        nbLvl++;
+;  384	        nbLvl++;
 	LD	A,(_nbLvl)
 	INC	A
 	LD	(_nbLvl),A
-;  384	        maxLvl=nbLvl;
+;  385	        maxLvl=nbLvl;
 	LD	(_maxLvl),A
-;  385	    }
-;  386	}
+;  386	    }
+;  387	}
 L_185:
 	RET	
 
@@ -3019,11 +3011,11 @@ L__112:
 	DB	"A suivre..."
 	DB	0
 	SEGMENT CODE
-;  387	
-;  388	void print_string_centered(const char *str, uint16_t y) {
+;  388	
+;  389	void print_string_centered(const char *str, uint16_t y) {
 _print_string_centered:
 	CALL	__frameset0
-;  389	    gfx_PrintStringXY(str, (gfx_lcdWidth-gfx_GetStringWidth(str)) / 2, y);
+;  390	    gfx_PrintStringXY(str, (gfx_lcdWidth-gfx_GetStringWidth(str)) / 2, y);
 	LD	BC,(IX+9)
 	CALL	__stoiu
 	PUSH	HL
@@ -3044,7 +3036,7 @@ _print_string_centered:
 	POP	BC
 	POP	BC
 	POP	BC
-;  390	}
+;  391	}
 	LD	SP,IX
 	POP	IX
 	RET	
@@ -3062,13 +3054,13 @@ _print_string_centered:
 ;       Spill Code: 0 (instruction)
 
 
-;  391	
-;  392	void nopwait(uint16_t n) {
+;  392	
+;  393	void nopwait(uint16_t n) {
 _nopwait:
 	LD	HL,-2
 	CALL	__frameset
-;  393	    uint16_t j;
-;  394	    for (j=0; j<n; j++) asm("nop"); // small delay
+;  394	    uint16_t j;
+;  395	    for (j=0; j<n; j++) asm("nop"); // small delay
 	LD	(IX+-2),0
 	LD	(IX+-1),0
 	JR	L_190
@@ -3084,7 +3076,7 @@ L_190:
 	OR	A,A
 	SBC.SIS	HL,BC
 	JR	C,L_188
-;  395	}
+;  396	}
 	LD	SP,IX
 	POP	IX
 	RET	
@@ -3100,25 +3092,25 @@ L_190:
 ;       Spill Code: 0 (instruction)
 
 
-;  396	
-;  397	//Code by Xavier Andréani, Baptiste Bideau, John Breaker, Péter Asztalos
-;  398	//with 1 modification
-;  399	
-;  400	void FadeIn() {
+;  397	
+;  398	//Code by Xavier Andréani, Baptiste Bideau, John Breaker, Péter Asztalos
+;  399	//with 1 modification
+;  400	
+;  401	void FadeIn() {
 _FadeIn:
 	LD	HL,-1
 	CALL	__frameset
-;  401	    uint8_t i=0;
-;  402	    for (i=*brightness; i>=normalB/*Here replace userBrightness by normalB*/; i--)
+;  402	    uint8_t i=0;
+;  403	    for (i=*brightness; i>=normalB/*Here replace userBrightness by normalB*/; i--)
 	LD	HL,(_brightness)
 	LD	A,(HL)
 	LD	(IX+-1),A
 	JR	L_195
 L_193:
-;  403	    {
-;  404	        *brightness = i;
+;  404	    {
+;  405	        *brightness = i;
 	LD	A,(IX+-1)
-;  405	        nopwait(2000);
+;  406	        nopwait(2000);
 	LD	BC,2000
 	PUSH	BC
 	LD	HL,(_brightness)
@@ -3126,13 +3118,13 @@ L_193:
 	CALL	_nopwait
 	POP	BC
 	DEC	(IX+-1)
-;  406	    }
+;  407	    }
 L_195:
 	LD	A,(IX+-1)
 	LD	HL,_normalB
 	CP	A,(HL)
 	JR	NC,L_193
-;  407	}
+;  408	}
 	LD	SP,IX
 	POP	IX
 	RET	
@@ -3150,22 +3142,22 @@ L_195:
 ;       Spill Code: 0 (instruction)
 
 
-;  408	
-;  409	void FadeOut() {
+;  409	
+;  410	void FadeOut() {
 _FadeOut:
 	LD	HL,-1
 	CALL	__frameset
-;  410	    uint8_t i=0;
-;  411	    for (i=*brightness; i<=minBrightness; i++)
+;  411	    uint8_t i=0;
+;  412	    for (i=*brightness; i<=minBrightness; i++)
 	LD	HL,(_brightness)
 	LD	A,(HL)
 	LD	(IX+-1),A
 	JR	L_200
 L_198:
-;  412	    {
-;  413	        *brightness = i;
+;  413	    {
+;  414	        *brightness = i;
 	LD	A,(IX+-1)
-;  414	        nopwait(2000);
+;  415	        nopwait(2000);
 	LD	BC,2000
 	PUSH	BC
 	LD	HL,(_brightness)
@@ -3173,7 +3165,7 @@ L_198:
 	CALL	_nopwait
 	POP	BC
 	INC	(IX+-1)
-;  415	    }
+;  416	    }
 L_200:
 	LD	A,(_minBrightness)
 	CP	A,(IX+-1)

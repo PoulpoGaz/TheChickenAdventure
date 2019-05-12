@@ -1,0 +1,94 @@
+; Zilog eZ80 ANSI C Compiler Release 3.4
+; -optsize -noreduceopt -nomodsect -peephole -globalopt
+; -localcse -const=ROM 
+	FILE	"SRC\GFX\DOCTOR_CHICKEN.C"
+	.assume ADL=1
+	SEGMENT DATA
+_doctor_chicken_data:
+	DB	7
+	DB	11
+	DB	0
+	DB	0
+	DB	0
+	DB	15
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	15
+	DB	15
+	DB	15
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	21
+	DB	15
+	DB	21
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	15
+	DB	30
+	DB	15
+	DB	0
+	DB	0
+	DB	0
+	DB	2
+	DB	2
+	DB	15
+	DB	2
+	DB	2
+	DB	0
+	DB	2
+	DB	20
+	DB	2
+	DB	21
+	DB	2
+	DB	20
+	DB	2
+	DB	2
+	DB	20
+	DB	2
+	DB	20
+	DB	2
+	DB	20
+	DB	2
+	DB	0
+	DB	2
+	DB	20
+	DB	21
+	DB	20
+	DB	2
+	DB	0
+	DB	0
+	DB	0
+	DB	2
+	DB	2
+	DB	2
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	30
+	DB	4
+	DB	30
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	21
+	DB	4
+	DB	21
+	DB	0
+	DB	0
+	XDEF _doctor_chicken_data
+;    1	// Converted using ConvPNG
+;    2	#include <stdint.h>
+;    3	#include "sprites_gfx.h"
+;    4	
+;    5	// 8 bpp image
+;    6	uint8_t doctor_chicken_data[79] = {
+	END

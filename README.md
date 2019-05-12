@@ -14,8 +14,7 @@ Choisissez la commande Asm( dans le menu catalogue ([2nd][0]) et séléctionnez CH
 
 [Flèches directionnelles] - Se déplacer
 [2nd]                     - Recharger le niveau en cours
-[del]                     - Quitter le niveau
-[clear]                   - Quitter le jeu
+[del]                     - Quitte le niveau ou le jeu
 
 # IV) Code source
 
@@ -26,11 +25,13 @@ Github: https://github.com/PoulpoGaz/TheChickenAdventureI
 Les niveaux viennent du jeu Boxxle. Il y a les 53 premiers niveaux(sans le 39, 45 et 48)
 Youtube: https://www.youtube.com/channel/UCICvk9cSz-tmk42xImnfH5Q/featured
 
-
 # VI) Patch log
 
 v1.0-Release
 v1.1-Lvl14 corrigé
 v1.2-Lvl31 corrigé et enlèvement de condition non-nécessaire
 v1.3-Quelque optimisation. Transition niveau. Menu statistiques (Push et Mouvements).
-v1.3.1-Corrections
+v1.4-Corrections
+v1.5-Transition level plus longue
+v1.6-Corrections
+v2.0-Refonte du code

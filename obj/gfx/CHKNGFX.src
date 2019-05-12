@@ -1,0 +1,138 @@
+; Zilog eZ80 ANSI C Compiler Release 3.4
+; -optsize -noreduceopt -nomodsect -peephole -globalopt
+; -localcse -const=ROM 
+	FILE	"SRC\GFX\CHKNGFX.C"
+	.assume ADL=1
+	SEGMENT DATA
+_CHKNGFX:
+	DW24	0
+	DW24	258
+	DW24	516
+	DW24	774
+	DW24	1032
+	DW24	1290
+	DW24	1548
+	DW24	2782
+	DW24	3040
+	DW24	18722
+	DW24	18980
+	DW24	19238
+;    1	// Converted using ConvPNG
+;    2	#include <stdint.h>
+;    3	#include "CHKNGFX.h"
+;    4	
+;    5	#include <fileioc.h>
+;    6	uint8_t *CHKNGFX[12] = {
+	SEGMENT CODE
+;    7	 (uint8_t*)0,
+;    8	 (uint8_t*)258,
+;    9	 (uint8_t*)516,
+;   10	 (uint8_t*)774,
+;   11	 (uint8_t*)1032,
+;   12	 (uint8_t*)1290,
+;   13	 (uint8_t*)1548,
+;   14	 (uint8_t*)2782,
+;   15	 (uint8_t*)3040,
+;   16	 (uint8_t*)18722,
+;   17	 (uint8_t*)18980,
+;   18	 (uint8_t*)19238,
+;   19	};
+;   20	
+;   21	bool CHKNGFX_init(void) {
+_CHKNGFX_init:
+	LD	HL,-10
+	CALL	__frameset
+;   22	    unsigned int data, i;
+;   23	    ti_var_t appvar;
+;   24	
+;   25	    ti_CloseAll();
+	CALL	_ti_CloseAll
+;   26	
+;   27	    appvar = ti_Open("CHKNGFX", "r");
+	LD	BC,L__0
+	PUSH	BC
+	LD	BC,L__1
+	PUSH	BC
+	CALL	_ti_Open
+	POP	BC
+	POP	BC
+	LD	(IX+-4),A
+;   28	    data = (unsigned int)ti_GetDataPtr(appvar) - (unsigned int)CHKNGFX[0];
+	LD	C,(IX+-4)
+	LD	B,0
+	PUSH	BC
+	CALL	_ti_GetDataPtr
+	POP	BC
+	LD	BC,(_CHKNGFX)
+	OR	A,A
+	SBC	HL,BC
+	LD	(IX+-7),HL
+;   29	    for (i = 0; i < CHKNGFX_num; i++) {
+	LD	BC,0
+	LD	(IX+-3),BC
+	JR	L_3
+L_1:
+;   30	        CHKNGFX[i] += data;
+	LD	HL,(IX+-3)
+	LD	BC,HL
+	ADD	HL,HL
+	ADD	HL,BC
+	LD	BC,_CHKNGFX
+	ADD	HL,BC
+	LD	(IX+-10),HL
+	LD	HL,(HL)
+	LD	IY,(IX+-10)
+	LD	BC,(IX+-7)
+	ADD	HL,BC
+	LD	(IY),HL
+	LD	BC,(IX+-3)
+	INC	BC
+	LD	(IX+-3),BC
+;   31	    }
+L_3:
+	LD	BC,12
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	C,L_1
+;   32	
+;   33	    ti_CloseAll();
+	CALL	_ti_CloseAll
+;   34	
+;   35	    return (bool)appvar;
+	LD	A,(IX+-4)
+;   36	}
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _CHKNGFX_init ***************************
+;Name                         Addr/Register   Size   Type
+;_CHKNGFX                            STATIC     36   variable
+;_ti_GetDataPtr                      IMPORT  -----   function
+;_ti_Open                            IMPORT  -----   function
+;_ti_CloseAll                        IMPORT  -----   function
+;data                                  IX-7      3   variable
+;appvar                                IX-4      1   variable
+;i                                     IX-3      3   variable
+
+
+; Stack Frame Size: 16 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+	SEGMENT STRSECT
+L__0:
+	DB	"r"
+	DB	0
+L__1:
+	DB	"CHKNGFX"
+	DB	0
+	XREF _ti_GetDataPtr:ROM
+	XREF _ti_Open:ROM
+	XREF _ti_CloseAll:ROM
+	XREF __frameset:ROM
+	XDEF _CHKNGFX_init
+	XDEF _CHKNGFX
+	END

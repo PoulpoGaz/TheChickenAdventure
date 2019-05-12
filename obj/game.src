@@ -1,0 +1,1344 @@
+; Zilog eZ80 ANSI C Compiler Release 3.4
+; -optsize -noreduceopt -nomodsect -peephole -globalopt
+; -localcse -const=ROM 
+	FILE	"SRC\GAME.C"
+	.assume ADL=1
+	SEGMENT CODE
+;    1	#include "game.h"
+;    2	
+;    3	void renderGame() {
+_renderGame:
+	LD	HL,-2
+	CALL	__frameset
+;    4		uint8_t x, y;
+;    5	    for(y = 0; y < 15; y++) {
+	LD	(IX+-2),0
+	JR	L_7
+L_5:
+;    6	        for(x = 0; x < 20; x++) {
+	LD	(IX+-1),0
+	JR	L_4
+L_2:
+;    7	            gfx_Sprite(level[y][x].sprite,x*16,y*16);
+	LD	A,(IX+-2)
+	UEXT	HL
+	LD	L,A
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	PUSH	HL
+	LD	A,(IX+-1)
+	UEXT	HL
+	LD	L,A
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	PUSH	HL
+	LD	A,(IX+-2)
+	UEXT	HL
+	LD	L,A
+	LD	A,80
+	CALL	__imul_b
+	LD	A,(IX+-1)
+	LD	BC,_level
+	ADD	HL,BC
+	LD	BC,HL
+	UEXT	HL
+	LD	L,A
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,BC
+	LD	IY,HL
+	LD	BC,(IY+0)
+	PUSH	BC
+	CALL	_gfx_Sprite
+	POP	BC
+	POP	BC
+	POP	BC
+	INC	(IX+-1)
+;    8	        }
+L_4:
+	LD	A,(IX+-1)
+	CP	A,20
+	JR	C,L_2
+	INC	(IX+-2)
+;    9	    }
+L_7:
+	LD	A,(IX+-2)
+	CP	A,15
+	JR	C,L_5
+;   10	    gfx_TransparentSprite(chicken.sprite, chicken.x * 16, chicken.y * 16);
+	LD	A,(_chicken+1)
+	UEXT	HL
+	LD	L,A
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	PUSH	HL
+	LD	A,(_chicken)
+	UEXT	HL
+	LD	L,A
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,HL
+	PUSH	HL
+	LD	BC,(_chicken+2)
+	PUSH	BC
+	CALL	_gfx_TransparentSprite
+	POP	BC
+	POP	BC
+	POP	BC
+;   11	
+;   12	    gfx_PrintStringXY("Level:",0,0);
+	LD	BC,0
+	PUSH	BC
+	PUSH	BC
+	LD	BC,L__2
+	PUSH	BC
+	CALL	_gfx_PrintStringXY
+	POP	BC
+	POP	BC
+	POP	BC
+;   13	    gfx_SetTextXY(45,0);
+	LD	BC,0
+	PUSH	BC
+	LD	BC,45
+	PUSH	BC
+	CALL	_gfx_SetTextXY
+	POP	BC
+	POP	BC
+;   14	    gfx_PrintUInt(curentLevel+1,2);
+	LD	A,(_curentLevel)
+	UEXT	HL
+	LD	L,A
+	LD	BC,2
+	PUSH	BC
+	INC	HL
+	PUSH	HL
+	CALL	_gfx_PrintUInt
+	POP	BC
+	POP	BC
+;   15	    gfx_PrintStringXY("Mouvements",80, 0);
+	LD	BC,0
+	PUSH	BC
+	LD	BC,80
+	PUSH	BC
+	LD	BC,L__3
+	PUSH	BC
+	CALL	_gfx_PrintStringXY
+	POP	BC
+	POP	BC
+	POP	BC
+;   16	    gfx_SetTextXY(170,0);
+	LD	BC,0
+	PUSH	BC
+	LD	BC,170
+	PUSH	BC
+	CALL	_gfx_SetTextXY
+	POP	BC
+	POP	BC
+;   17	    gfx_PrintUInt(chicken.moves, 5);
+	LD	BC,5
+	PUSH	BC
+	LD	BC,(_chicken+8)
+	PUSH	BC
+	CALL	_gfx_PrintUInt
+	POP	BC
+	POP	BC
+;   18	    gfx_PrintStringXY("Push:",220,0);
+	LD	BC,0
+	PUSH	BC
+	LD	BC,220
+	PUSH	BC
+	LD	BC,L__4
+	PUSH	BC
+	CALL	_gfx_PrintStringXY
+	POP	BC
+	POP	BC
+	POP	BC
+;   19	    gfx_SetTextXY(260,0);
+	LD	BC,0
+	PUSH	BC
+	LD	BC,260
+	PUSH	BC
+	CALL	_gfx_SetTextXY
+	POP	BC
+	POP	BC
+;   20	    gfx_PrintUInt(chicken.pushs, 5),
+	LD	BC,5
+	PUSH	BC
+	LD	BC,(_chicken+5)
+	PUSH	BC
+	CALL	_gfx_PrintUInt
+	POP	BC
+	POP	BC
+;   21	    print_string_centered("[2nd]-recommencer [Del]-retour", 230);
+	LD	BC,230
+	PUSH	BC
+	LD	BC,L__5
+	PUSH	BC
+	CALL	_print_string_centered
+	POP	BC
+	POP	BC
+;   22	    gfx_SwapDraw();
+	CALL	_gfx_SwapDraw
+;   23	}
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _renderGame ***************************
+;Name                         Addr/Register   Size   Type
+;_gfx_SwapDraw                       IMPORT  -----   function
+;_print_string_centered              IMPORT  -----   function
+;_curentLevel                        IMPORT      1   variable
+;_gfx_PrintUInt                      IMPORT  -----   function
+;_gfx_SetTextXY                      IMPORT  -----   function
+;_gfx_PrintStringXY                  IMPORT  -----   function
+;_chicken                            IMPORT     11   variable
+;_gfx_TransparentSprite              IMPORT  -----   function
+;_level                              IMPORT   1200   variable
+;_gfx_Sprite                         IMPORT  -----   function
+;y                                     IX-2      1   variable
+;x                                     IX-1      1   variable
+
+
+; Stack Frame Size: 8 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+	SEGMENT STRSECT
+L__2:
+	DB	"Level:"
+	DB	0
+L__3:
+	DB	"Mouvements"
+	DB	0
+L__4:
+	DB	"Push:"
+	DB	0
+L__5:
+	DB	"[2nd]-recommencer [Del]-retour"
+	DB	0
+	SEGMENT CODE
+;   24	
+;   25	void updateGame() {
+_updateGame:
+	LD	HL,-3
+	CALL	__frameset
+;   26	    int dx = 0;
+;   27	    int dy = 0;
+	LD	BC,0
+	LD	(IX+-3),BC
+;   28	    if(key(key_up)) {
+	LD	BC,_key_up
+	PUSH	BC
+	CALL	_key
+	POP	BC
+	OR	A,A
+	JR	Z,L_12
+;   29	        chicken.sprite = chicken_up;
+	LD	BC,_chicken_up_data
+	LD	(_chicken+2),BC
+;   30	        dy = -1;
+	LD	BC,16777215
+	LD	(IX+-3),BC
+;   31	        collide(dx,dy);
+	PUSH	BC
+	LD	BC,0
+	PUSH	BC
+	CALL	_collide
+	POP	BC
+	POP	BC
+;   32	    }
+L_12:
+;   33	    if(key(key_down)) {
+	LD	BC,_key_down
+	PUSH	BC
+	CALL	_key
+	POP	BC
+	OR	A,A
+	JR	Z,L_14
+;   34	        chicken.sprite = chicken_down;
+	LD	BC,_chicken_down_data
+	LD	(_chicken+2),BC
+;   35	        dy = 1;
+	LD	BC,1
+	LD	(IX+-3),BC
+;   36	        collide(dx,dy);
+	PUSH	BC
+	LD	BC,0
+	PUSH	BC
+	CALL	_collide
+	POP	BC
+	POP	BC
+;   37	    }
+L_14:
+;   38	    if(key(key_left)) {
+	LD	BC,_key_left
+	PUSH	BC
+	CALL	_key
+	POP	BC
+	OR	A,A
+	JR	Z,L_16
+;   39	        chicken.sprite = chicken_left;
+	LD	BC,_chicken_left_data
+	LD	(_chicken+2),BC
+;   40	        dx = -1;
+;   41	        collide(dx,dy);
+	LD	BC,(IX+-3)
+	PUSH	BC
+	LD	BC,16777215
+	PUSH	BC
+	CALL	_collide
+	POP	BC
+	POP	BC
+;   42	    }
+L_16:
+;   43	    if(key(key_right)) {
+	LD	BC,_key_right
+	PUSH	BC
+	CALL	_key
+	POP	BC
+	OR	A,A
+	JR	Z,L_18
+;   44	        chicken.sprite = chicken_right;
+	LD	BC,_chicken_right_data
+	LD	(_chicken+2),BC
+;   45	        dx = 1;
+;   46	        collide(dx,dy);
+	LD	BC,(IX+-3)
+	PUSH	BC
+	LD	BC,1
+	PUSH	BC
+	CALL	_collide
+	POP	BC
+	POP	BC
+;   47	    }
+L_18:
+;   48	    if(key(key_Del)) {
+	LD	BC,_key_Del
+	PUSH	BC
+	CALL	_key
+	POP	BC
+	OR	A,A
+	JR	Z,L_20
+;   49	        gameState = MENU;
+	LD	BC,0
+	LD	(_gameState),BC
+;   50	    }
+L_20:
+;   51	    if(key(key_2nd)) {
+	LD	BC,_key_2nd
+	PUSH	BC
+	CALL	_key
+	POP	BC
+	OR	A,A
+	JR	Z,L_21
+;   52	        generate();
+	CALL	_generate
+;   53	    }
+L_21:
+;   54	
+;   55	    check_victory();
+	CALL	_check_victory
+;   56	}
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _updateGame ***************************
+;Name                         Addr/Register   Size   Type
+;_check_victory                      IMPORT  -----   function
+;_generate                           IMPORT  -----   function
+;_key_2nd                            IMPORT      2   variable
+;_gameState                          IMPORT      3   variable
+;_key_Del                            IMPORT      2   variable
+;_chicken_right_data                 IMPORT    258   variable
+;_key_right                          IMPORT      2   variable
+;_chicken_left_data                  IMPORT    258   variable
+;_key_left                           IMPORT      2   variable
+;_chicken_down_data                  IMPORT    258   variable
+;_key_down                           IMPORT      2   variable
+;_collide                            IMPORT  -----   function
+;_chicken                            IMPORT     11   variable
+;_chicken_up_data                    IMPORT    258   variable
+;_key_up                             IMPORT      2   variable
+;_key                                IMPORT  -----   function
+;dy                                    IX-3      3   variable
+
+
+; Stack Frame Size: 9 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+;   57	
+;   58	void collide(int dx, int dy) {
+_collide:
+	LD	HL,-25
+	CALL	__frameset
+;   59	    uint8_t x = chicken.x + dx;
+	LD	B,(IX+6)
+	LD	A,(_chicken)
+	ADD	A,B
+	LD	(IX+-3),A
+;   60	    uint8_t y = chicken.y + dy;
+	LD	B,(IX+9)
+	LD	A,(_chicken+1)
+	ADD	A,B
+	LD	(IX+-1),A
+;   61	    uint8_t x2 = x + dx;
+	LD	A,(IX+6)
+	ADD	A,(IX+-3)
+	LD	(IX+-7),A
+;   62	    uint8_t y2 = y + dy;
+	LD	A,(IX+9)
+	ADD	A,(IX+-1)
+	LD	(IX+-2),A
+;   63	
+;   64	    if(level[y][x].value == 1 || level[y][x].value == 2) {
+	LD	A,(IX+-1)
+	UEXT	HL
+	LD	L,A
+	LD	A,80
+	CALL	__imul_b
+	LD	A,(IX+-3)
+	LD	BC,_level
+	ADD	HL,BC
+	LD	BC,HL
+	UEXT	HL
+	LD	L,A
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,BC
+	LD	(IX+-6),HL
+	LD	IY,(IX+-6)
+	LD	A,(IY+3)
+	CP	A,1
+	JR	Z,L_44
+	LD	IY,(IX+-6)
+	LD	A,(IY+3)
+	CP	A,2
+	JR	NZ,L_45
+L_44:
+;   65	        chicken.x = x;
+	LD	A,(IX+-3)
+	LD	(_chicken),A
+;   66	        chicken.y = y;
+	LD	A,(IX+-1)
+	LD	(_chicken+1),A
+;   67	        chicken.moves++;
+	LD	BC,(_chicken+8)
+	INC	BC
+	LD	(_chicken+8),BC
+;   68	    } else if(level[y][x].value == 3) {
+	JR	L_46
+L_45:
+	LD	IY,(IX+-6)
+	LD	A,(IY+3)
+	CP	A,3
+	JR	NZ,L_43
+;   69	        if(level[y2][x2].value == 1 || level[y2][x2].value == 2) {
+	LD	A,(IX+-2)
+	UEXT	HL
+	LD	L,A
+	LD	A,80
+	CALL	__imul_b
+	LD	A,(IX+-7)
+	LD	BC,_level
+	ADD	HL,BC
+	LD	BC,HL
+	UEXT	HL
+	LD	L,A
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,BC
+	LD	(IX+-10),HL
+	LD	(IX+-22),HL
+	LD	IY,(IX+-10)
+	LD	A,(IY+3)
+	CP	A,1
+	JR	Z,L_32
+	LD	BC,(IX+-10)
+	LD	(IX+-22),BC
+	LD	IY,(IX+-10)
+	LD	A,(IY+3)
+	CP	A,2
+	JR	NZ,L_46
+L_32:
+;   70	            chicken.x = x;
+	LD	A,(IX+-3)
+	LD	(_chicken),A
+;   71	            chicken.y = y;
+	LD	A,(IX+-1)
+	LD	(_chicken+1),A
+;   72	            chicken.moves++;
+	LD	BC,(_chicken+8)
+	INC	BC
+	LD	(_chicken+8),BC
+;   73	            chicken.pushs++;
+	LD	BC,(_chicken+5)
+	INC	BC
+	LD	(_chicken+5),BC
+;   74	
+;   75	            if(level[y2][x2].value == 1) {
+	LD	BC,(IX+-22)
+	LD	(IX+-16),BC
+	LD	IY,(IX+-16)
+	LD	A,(IY+3)
+	CP	A,1
+	JR	NZ,L_31
+;   76	                initCase(x, y, 1);
+	LD	BC,1
+	PUSH	BC
+	LD	C,(IX+-1)
+	LD	B,0
+	PUSH	BC
+	LD	C,(IX+-3)
+	PUSH	BC
+	CALL	_initCase
+	POP	BC
+	POP	BC
+	POP	BC
+;   77	                initCase(x2, y2, 3);
+	LD	BC,3
+	PUSH	BC
+	LD	C,(IX+-2)
+	LD	B,0
+	PUSH	BC
+	LD	C,(IX+-7)
+	PUSH	BC
+	CALL	_initCase
+	POP	BC
+	POP	BC
+	POP	BC
+;   78	            } else if(level[y2][x2].value == 2) {
+	JR	L_46
+L_31:
+	LD	IY,(IX+-16)
+	LD	A,(IY+3)
+	CP	A,2
+	JR	NZ,L_46
+;   79	                initCase(x, y, 1);
+	LD	BC,1
+	PUSH	BC
+	LD	C,(IX+-1)
+	LD	B,0
+	PUSH	BC
+	LD	C,(IX+-3)
+	PUSH	BC
+	CALL	_initCase
+	POP	BC
+	POP	BC
+	POP	BC
+;   80	                initCase(x2, y2,4);
+	LD	BC,4
+	PUSH	BC
+	LD	C,(IX+-2)
+	LD	B,0
+	PUSH	BC
+	LD	C,(IX+-7)
+	PUSH	BC
+	CALL	_initCase
+	POP	BC
+	POP	BC
+	POP	BC
+;   81	                nbCaisseOk++;
+	LD	A,(_nbCaisseOk)
+	INC	A
+	LD	(_nbCaisseOk),A
+;   82	            }
+;   83	        }
+;   84	    } else if(level[y][x].value == 4) {
+	JR	L_46
+L_43:
+	LD	IY,(IX+-6)
+	LD	A,(IY+3)
+	CP	A,4
+	JR	NZ,L_46
+;   85	        if(level[y2][x2].value == 1 || level[y2][x2].value == 2) {
+	LD	A,(IX+-2)
+	UEXT	HL
+	LD	L,A
+	LD	A,80
+	CALL	__imul_b
+	LD	A,(IX+-7)
+	LD	BC,_level
+	ADD	HL,BC
+	LD	BC,HL
+	UEXT	HL
+	LD	L,A
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,BC
+	LD	(IX+-13),HL
+	LD	(IX+-19),HL
+	LD	IY,(IX+-13)
+	LD	A,(IY+3)
+	CP	A,1
+	JR	Z,L_40
+	LD	BC,(IX+-13)
+	LD	(IX+-19),BC
+	LD	IY,(IX+-13)
+	LD	A,(IY+3)
+	CP	A,2
+	JR	NZ,L_46
+L_40:
+;   86	            chicken.x = x;
+	LD	A,(IX+-3)
+	LD	(_chicken),A
+;   87	            chicken.y = y;
+	LD	A,(IX+-1)
+	LD	(_chicken+1),A
+;   88	            chicken.moves++;
+	LD	BC,(_chicken+8)
+	INC	BC
+	LD	(_chicken+8),BC
+;   89	            chicken.pushs++;
+	LD	BC,(_chicken+5)
+	INC	BC
+	LD	(_chicken+5),BC
+;   90	
+;   91	            if(level[y2][x2].value == 1) {
+	LD	BC,(IX+-19)
+	LD	(IX+-25),BC
+	LD	IY,(IX+-25)
+	LD	A,(IY+3)
+	CP	A,1
+	JR	NZ,L_39
+;   92	                nbCaisseOk--;
+	LD	A,(_nbCaisseOk)
+	DEC	A
+	LD	(_nbCaisseOk),A
+;   93	                initCase(x, y, 2);
+	LD	BC,2
+	PUSH	BC
+	LD	C,(IX+-1)
+	LD	B,0
+	PUSH	BC
+	LD	C,(IX+-3)
+	PUSH	BC
+	CALL	_initCase
+	POP	BC
+	POP	BC
+	POP	BC
+;   94	                initCase(x2, y2, 3);
+	LD	BC,3
+	PUSH	BC
+	LD	C,(IX+-2)
+	LD	B,0
+	PUSH	BC
+	LD	C,(IX+-7)
+	PUSH	BC
+	CALL	_initCase
+	POP	BC
+	POP	BC
+	POP	BC
+;   95	            } else if(level[y2][x2].value == 2) {
+	JR	L_46
+L_39:
+	LD	IY,(IX+-25)
+	LD	A,(IY+3)
+	CP	A,2
+	JR	NZ,L_46
+;   96	                initCase(x, y, 2);
+	LD	BC,2
+	PUSH	BC
+	LD	C,(IX+-1)
+	LD	B,0
+	PUSH	BC
+	LD	C,(IX+-3)
+	PUSH	BC
+	CALL	_initCase
+	POP	BC
+	POP	BC
+	POP	BC
+;   97	                initCase(x2, y2, 4);
+	LD	BC,4
+	PUSH	BC
+	LD	C,(IX+-2)
+	LD	B,0
+	PUSH	BC
+	LD	C,(IX+-7)
+	PUSH	BC
+	CALL	_initCase
+	POP	BC
+	POP	BC
+	POP	BC
+;   98	            }
+;   99	        }
+;  100	    }
+;  101	}
+L_46:
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _collide ***************************
+;Name                         Addr/Register   Size   Type
+;_nbCaisseOk                         IMPORT      1   variable
+;_initCase                           IMPORT  -----   function
+;_level                              IMPORT   1200   variable
+;_chicken                            IMPORT     11   variable
+;G_26                                 IX-25      3   variable
+;G_11                                 IX-22      3   variable
+;G_23                                 IX-19      3   variable
+;G_14                                 IX-16      3   variable
+;G_19                                 IX-13      3   variable
+;G_7                                  IX-10      3   variable
+;x2                                    IX-7      1   variable
+;G_1                                   IX-6      3   variable
+;x                                     IX-3      1   variable
+;y2                                    IX-2      1   variable
+;y                                     IX-1      1   variable
+;dy                                    IX+9      3   parameter
+;dx                                    IX+6      3   parameter
+
+
+; Stack Frame Size: 37 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+;  102	
+;  103	void check_victory() {
+_check_victory:
+	LD	HL,-12
+	CALL	__frameset
+;  104	    if(nbCaisseOk == nbObj) {
+	LD	A,(_nbCaisseOk)
+	LD	HL,_nbObj
+	CP	A,(HL)
+	JR	NZ,L_58
+;  105	        if(curentLevel + 1 < 50) {
+	LD	A,(_curentLevel)
+	UEXT	HL
+	LD	L,A
+	INC	HL
+	LD	(IX+-3),HL
+	OR	A,A
+	LD	BC,50
+	SBC	HL,BC
+	JP	P,L_56
+;  106	            if(Moves[curentLevel] < chicken.moves) {
+	LD	A,(_curentLevel)
+	UEXT	HL
+	LD	L,A
+	LD	BC,HL
+	ADD	HL,HL
+	ADD	HL,BC
+	LD	(IX+-6),HL
+	LD	BC,_Moves
+	ADD	HL,BC
+	LD	(IX+-9),HL
+	LD	HL,(HL)
+	LD	BC,(_chicken+8)
+	OR	A,A
+	SBC	HL,BC
+	JR	NC,L_49
+;  107	                Moves[curentLevel] = chicken.moves;
+	LD	HL,(IX+-9)
+	LD	BC,(_chicken+8)
+	LD	(HL),BC
+;  108	            }
+L_49:
+;  109	            if(Pushs[curentLevel] < chicken.pushs) {
+	LD	BC,(IX+-6)
+	LD	HL,_Pushs
+	ADD	HL,BC
+	LD	(IX+-12),HL
+	LD	HL,(HL)
+	LD	BC,(_chicken+5)
+	OR	A,A
+	SBC	HL,BC
+	JR	NC,L_51
+;  110	                Pushs[curentLevel] = chicken.pushs;
+	LD	HL,(IX+-12)
+	LD	BC,(_chicken+5)
+	LD	(HL),BC
+;  111	            }
+L_51:
+;  112	            curentLevel++;
+	LD	A,(_curentLevel)
+	INC	A
+	LD	(_curentLevel),A
+;  113	            if(curentLevel>maxLvl) {
+	LD	A,(_maxLvl)
+	LD	HL,_curentLevel
+	CP	A,(HL)
+	JR	NC,L_53
+;  114	                maxLvl=curentLevel;
+	LD	A,(_curentLevel)
+	LD	(_maxLvl),A
+;  115	            }
+L_53:
+;  116	            FadeOut();
+	CALL	_FadeOut
+;  117	            generate();
+	CALL	_generate
+;  118	            renderGame();
+	CALL	_renderGame
+;  119	            FadeIn();
+	CALL	_FadeIn
+;  120	        } else if(curentLevel+1==50) {
+	JR	L_58
+L_56:
+	LD	HL,(IX+-3)
+	OR	A,A
+	SBC	HL,BC
+	JR	NZ,L_58
+;  121	            endGame();
+	CALL	_endGame
+;  122	        }
+;  123	    }
+;  124	}
+L_58:
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _check_victory ***************************
+;Name                         Addr/Register   Size   Type
+;_endGame                            IMPORT  -----   function
+;_FadeIn                             IMPORT  -----   function
+;_renderGame                         IMPORT  -----   function
+;_generate                           IMPORT  -----   function
+;_FadeOut                            IMPORT  -----   function
+;_maxLvl                             IMPORT      1   variable
+;_Pushs                              IMPORT    150   variable
+;_chicken                            IMPORT     11   variable
+;_Moves                              IMPORT    150   variable
+;_curentLevel                        IMPORT      1   variable
+;_nbObj                              IMPORT      1   variable
+;_nbCaisseOk                         IMPORT      1   variable
+;G_29                                 IX-12      3   variable
+;G_27                                  IX-9      3   variable
+;G_28                                  IX-6      3   variable
+;G_30                                  IX-3      3   variable
+
+
+; Stack Frame Size: 18 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+;  125	
+;  126	void startGame() {
+_startGame:
+;  127	    generate();
+	CALL	_generate
+;  128	    gameState = GAME;
+	LD	BC,2
+	LD	(_gameState),BC
+;  129	}
+	RET	
+
+
+;**************************** _startGame ***************************
+;Name                         Addr/Register   Size   Type
+;_gameState                          IMPORT      3   variable
+;_generate                           IMPORT  -----   function
+
+
+; Stack Frame Size: 6 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+;  130	
+;  131	void newGame() {
+_newGame:
+	LD	HL,-1
+	CALL	__frameset
+;  132	    uint8_t a,b;
+;  133	    curentLevel=0;
+	XOR	A,A
+	LD	(_curentLevel),A
+;  134	    maxLvl=0;
+	XOR	A,A
+	LD	(_maxLvl),A
+;  135	    for(a=0;a<50;a++) {
+	LD	(IX+-1),0
+	JR	L_63
+L_61:
+;  136	        Moves[a]=0;
+	LD	A,(IX+-1)
+	UEXT	HL
+	LD	L,A
+	LD	BC,HL
+	ADD	HL,HL
+	ADD	HL,BC
+	LD	BC,HL
+	LD	HL,BC
+	LD	DE,_Moves
+	ADD	HL,DE
+	LD	DE,0
+	LD	(HL),DE
+;  137	        Pushs[a]=0;
+	LD	HL,BC
+	LD	BC,_Pushs
+	ADD	HL,BC
+	LD	BC,0
+	LD	(HL),BC
+	INC	(IX+-1)
+;  138	    } 
+L_63:
+	LD	A,(IX+-1)
+	CP	A,50
+	JR	C,L_61
+;  139	    introd();
+	CALL	_introd
+;  140	    startGame();
+	CALL	_startGame
+;  141	}
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _newGame ***************************
+;Name                         Addr/Register   Size   Type
+;_startGame                          IMPORT  -----   function
+;_introd                             IMPORT  -----   function
+;_Pushs                              IMPORT    150   variable
+;_Moves                              IMPORT    150   variable
+;_maxLvl                             IMPORT      1   variable
+;_curentLevel                        IMPORT      1   variable
+;a                                     IX-1      1   variable
+
+
+; Stack Frame Size: 7 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+;  142	
+;  143	void endGame() {
+_endGame:
+;  144	    end();
+	CALL	_end
+;  145	    while(!os_GetCSC());
+L_67:
+	CALL	_os_GetCSC
+	OR	A,A
+	JR	Z,L_67
+;  146	    if(curentLevel!=50) {
+	LD	A,(_curentLevel)
+	CP	A,50
+	JR	Z,L_71
+;  147	        curentLevel++;
+	LD	A,(_curentLevel)
+	INC	A
+	LD	(_curentLevel),A
+;  148	        maxLvl=curentLevel;
+	LD	(_maxLvl),A
+;  149	    }
+L_71:
+;  150	    gameState = MENU;
+	LD	BC,0
+	LD	(_gameState),BC
+;  151	}
+	RET	
+
+
+;**************************** _endGame ***************************
+;Name                         Addr/Register   Size   Type
+;_gameState                          IMPORT      3   variable
+;_maxLvl                             IMPORT      1   variable
+;_curentLevel                        IMPORT      1   variable
+;_os_GetCSC                          IMPORT  -----   function
+;_end                                IMPORT  -----   function
+
+
+; Stack Frame Size: 6 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+;  152	
+;  153	//INIT METHOD
+;  154	
+;  155	void generate() {
+_generate:
+	LD	HL,-3
+	CALL	__frameset
+;  156	    uint8_t x, y, tileValue;
+;  157	    nbObj=0;
+	XOR	A,A
+	LD	(_nbObj),A
+;  158	    nbCaisseOk=0;
+	XOR	A,A
+	LD	(_nbCaisseOk),A
+;  159	    for(y = 0; y < 15; y++) {
+	LD	(IX+-2),0
+	JR	L_84
+L_82:
+;  160	        for(x = 0; x < 20; x++) {
+	LD	(IX+-1),0
+	JR	L_81
+L_79:
+;  161	            tileValue = levels[curentLevel][y][x];
+	LD	A,(_curentLevel)
+	UEXT	HL
+	LD	L,A
+	LD	BC,300
+	CALL	__imulu
+	LD	BC,_levels
+	ADD	HL,BC
+	LD	BC,HL
+	LD	A,(IX+-2)
+	UEXT	HL
+	LD	L,A
+	LD	A,20
+	CALL	__imul_b
+	LD	A,(IX+-1)
+	ADD	HL,BC
+	LD	BC,HL
+	UEXT	HL
+	LD	L,A
+	ADD	HL,BC
+	LD	A,(HL)
+	LD	(IX+-3),A
+;  162	            
+;  163	            if(tileValue == 5) {
+	CP	A,5
+	JR	NZ,L_78
+;  164	                initCase(x, y, 1);
+	LD	BC,1
+	PUSH	BC
+	LD	C,(IX+-2)
+	LD	B,0
+	PUSH	BC
+	LD	C,(IX+-1)
+	PUSH	BC
+	CALL	_initCase
+	POP	BC
+	POP	BC
+	POP	BC
+;  165	                initChicken(x, y);
+	LD	C,(IX+-2)
+	LD	B,0
+	PUSH	BC
+	LD	C,(IX+-1)
+	PUSH	BC
+	CALL	_initChicken
+	POP	BC
+	POP	BC
+;  166	            } else {
+	JR	L_80
+L_78:
+;  167	                initCase(x, y, tileValue);
+	LD	C,(IX+-3)
+	LD	B,0
+	PUSH	BC
+	LD	C,(IX+-2)
+	PUSH	BC
+	LD	C,(IX+-1)
+	PUSH	BC
+	CALL	_initCase
+	POP	BC
+	POP	BC
+	POP	BC
+;  168	                
+;  169	                if(tileValue==2) {
+	LD	A,(IX+-3)
+	CP	A,2
+	JR	NZ,L_80
+;  170	                    nbObj++;
+	LD	A,(_nbObj)
+	INC	A
+	LD	(_nbObj),A
+;  171	                }
+;  172	            }
+;  173	        }
+L_80:
+	INC	(IX+-1)
+L_81:
+	LD	A,(IX+-1)
+	CP	A,20
+	JR	C,L_79
+	INC	(IX+-2)
+;  174	    }
+L_84:
+	LD	A,(IX+-2)
+	CP	A,15
+	JR	C,L_82
+;  175	}
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _generate ***************************
+;Name                         Addr/Register   Size   Type
+;_initChicken                        IMPORT  -----   function
+;_initCase                           IMPORT  -----   function
+;_curentLevel                        IMPORT      1   variable
+;_levels                             IMPORT  15000   variable
+;_nbCaisseOk                         IMPORT      1   variable
+;_nbObj                              IMPORT      1   variable
+;tileValue                             IX-3      1   variable
+;y                                     IX-2      1   variable
+;x                                     IX-1      1   variable
+
+
+; Stack Frame Size: 9 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+;  176	
+;  177	void initChicken(uint8_t x, uint8_t y) {
+_initChicken:
+	CALL	__frameset0
+;  178	    chicken.moves = 0;
+	LD	BC,0
+	LD	(_chicken+8),BC
+;  179	    chicken.pushs = 0;
+	LD	(_chicken+5),BC
+;  180	    chicken.x = x;
+	LD	A,(IX+6)
+	LD	(_chicken),A
+;  181	    chicken.y = y;
+	LD	A,(IX+9)
+	LD	(_chicken+1),A
+;  182	    chicken.sprite = chicken_down;
+	LD	BC,_chicken_down_data
+	LD	(_chicken+2),BC
+;  183	}
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _initChicken ***************************
+;Name                         Addr/Register   Size   Type
+;_chicken_down_data                  IMPORT    258   variable
+;_chicken                            IMPORT     11   variable
+;y                                     IX+9      1   parameter
+;x                                     IX+6      1   parameter
+
+
+; Stack Frame Size: 12 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+;  184	
+;  185	void initCase(uint8_t x, uint8_t y, uint8_t value) {
+_initCase:
+	CALL	__frameset0
+;  186	    if(value == 0) {
+	LD	A,(IX+12)
+	OR	A,A
+	JR	NZ,L_95
+;  187	        level[y][x].sprite = wall;
+	LD	A,(IX+9)
+	UEXT	HL
+	LD	L,A
+	LD	A,80
+	CALL	__imul_b
+	LD	A,(IX+6)
+	LD	BC,_level
+	ADD	HL,BC
+	LD	BC,HL
+	UEXT	HL
+	LD	L,A
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,BC
+	LD	IY,HL
+	LD	BC,_wall_data
+	LD	(IY+0),BC
+;  188	    } else if(value == 1) {
+	JR	L_96
+L_95:
+	LD	A,(IX+12)
+	CP	A,1
+	JR	NZ,L_93
+;  189	        level[y][x].sprite = grass;
+	LD	A,(IX+9)
+	UEXT	HL
+	LD	L,A
+	LD	A,80
+	CALL	__imul_b
+	LD	A,(IX+6)
+	LD	BC,_level
+	ADD	HL,BC
+	LD	BC,HL
+	UEXT	HL
+	LD	L,A
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,BC
+	LD	IY,HL
+	LD	BC,_grass_data
+	LD	(IY+0),BC
+;  190	    } else if(value == 2) {
+	JR	L_96
+L_93:
+	LD	A,(IX+12)
+	CP	A,2
+	JR	NZ,L_91
+;  191	        level[y][x].sprite = objectif;
+	LD	A,(IX+9)
+	UEXT	HL
+	LD	L,A
+	LD	A,80
+	CALL	__imul_b
+	LD	A,(IX+6)
+	LD	BC,_level
+	ADD	HL,BC
+	LD	BC,HL
+	UEXT	HL
+	LD	L,A
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,BC
+	LD	IY,HL
+	LD	BC,_objectif_data
+	LD	(IY+0),BC
+;  192	    } else if(value == 3) {
+	JR	L_96
+L_91:
+	LD	A,(IX+12)
+	CP	A,3
+	JR	NZ,L_89
+;  193	        level[y][x].sprite = caisse;
+	LD	A,(IX+9)
+	UEXT	HL
+	LD	L,A
+	LD	A,80
+	CALL	__imul_b
+	LD	A,(IX+6)
+	LD	BC,_level
+	ADD	HL,BC
+	LD	BC,HL
+	UEXT	HL
+	LD	L,A
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,BC
+	LD	IY,HL
+	LD	BC,_caisse_data
+	LD	(IY+0),BC
+;  194	    } else if(value == 4) {
+	JR	L_96
+L_89:
+	LD	A,(IX+12)
+	CP	A,4
+	JR	NZ,L_96
+;  195	        level[y][x].sprite = caisse_ok;
+	LD	A,(IX+9)
+	UEXT	HL
+	LD	L,A
+	LD	A,80
+	CALL	__imul_b
+	LD	A,(IX+6)
+	LD	BC,_level
+	ADD	HL,BC
+	LD	BC,HL
+	UEXT	HL
+	LD	L,A
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,BC
+	LD	IY,HL
+	LD	BC,_caisse_ok_data
+	LD	(IY+0),BC
+;  196	    }
+L_96:
+;  197	    level[y][x].value = value;
+	LD	A,(IX+9)
+	UEXT	HL
+	LD	L,A
+	LD	A,80
+	CALL	__imul_b
+	LD	BC,_level
+	ADD	HL,BC
+	LD	BC,HL
+	LD	A,(IX+6)
+	UEXT	HL
+	LD	L,A
+	LD	A,(IX+12)
+	ADD	HL,HL
+	ADD	HL,HL
+	ADD	HL,BC
+	LD	IY,HL
+	LD	(IY+3),A
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _initCase ***************************
+;Name                         Addr/Register   Size   Type
+;_caisse_ok_data                     IMPORT    258   variable
+;_caisse_data                        IMPORT    258   variable
+;_objectif_data                      IMPORT    258   variable
+;_grass_data                         IMPORT    258   variable
+;_level                              IMPORT   1200   variable
+;_wall_data                          IMPORT    258   variable
+;value                                IX+12      1   parameter
+;y                                     IX+9      1   parameter
+;x                                     IX+6      1   parameter
+
+
+; Stack Frame Size: 15 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+	XREF _level:ROM
+	XREF _maxLvl:ROM
+	XREF _nbCaisseOk:ROM
+	XREF _nbObj:ROM
+	XREF _curentLevel:ROM
+	XREF _gameState:ROM
+	XREF _Pushs:ROM
+	XREF _Moves:ROM
+	XREF _chicken:ROM
+	XREF _print_string_centered:ROM
+	XREF _end:ROM
+	XREF _introd:ROM
+	XREF _key_right:ROM
+	XREF _key_left:ROM
+	XREF _key_down:ROM
+	XREF _key_up:ROM
+	XREF _key_Del:ROM
+	XREF _key_2nd:ROM
+	XREF _key:ROM
+	XREF _FadeOut:ROM
+	XREF _FadeIn:ROM
+	XREF _levels:ROM
+	XREF _objectif_data:ROM
+	XREF _wall_data:ROM
+	XREF _grass_data:ROM
+	XREF _chicken_up_data:ROM
+	XREF _chicken_right_data:ROM
+	XREF _chicken_left_data:ROM
+	XREF _chicken_down_data:ROM
+	XREF _caisse_ok_data:ROM
+	XREF _caisse_data:ROM
+	XREF _gfx_TransparentSprite:ROM
+	XREF _gfx_Sprite:ROM
+	XREF _gfx_SetTextXY:ROM
+	XREF _gfx_PrintStringXY:ROM
+	XREF _gfx_PrintUInt:ROM
+	XREF _gfx_SwapDraw:ROM
+	XREF _os_GetCSC:ROM
+	XREF __imulu:ROM
+	XREF __frameset0:ROM
+	XREF __frameset:ROM
+	XREF __imul_b:ROM
+	XDEF _initCase
+	XDEF _initChicken
+	XDEF _generate
+	XDEF _endGame
+	XDEF _newGame
+	XDEF _startGame
+	XDEF _check_victory
+	XDEF _collide
+	XDEF _updateGame
+	XDEF _renderGame
+	END

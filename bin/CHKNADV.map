@@ -6,11 +6,11 @@ libs     D1A8DA D1A95D            83h
 startup  D1A95D D1A99C            3Fh
 cleanup  D1A99C D1A9B0            14h
 exit     D1A9B0 D1A9B6             6h
-code     D1A9B6 D1BE9E          14E8h
-data     D1BE9E D24180          82E2h
-strsect  D24180 D243FB           27Bh
-text     D243FB D243FB             0h
-bss      D031F6 D06DBB D13FD6   3BC5h
+code     D1A9B6 D1BD28          1372h
+data     D1BD28 D23FFF          82D7h
+strsect  D23FFF D242A3           2A4h
+text     D242A3 D242A3             0h
+bss      D031F6 D037E9 D13FD6    5F3h
 header   D1A87F D1A882             3h
 
 Label                                 Value
@@ -131,23 +131,20 @@ _asm_ArcChk                         = 022040
 _srandom                            = D1A9B6
 __setstate                          = D1A9BD
 _random                             = D1A9CD
-__state                             = D1BE9E
+__state                             = D1BD28
 _os_DisableHomeTextBuffer           = D1AA24
 _os_EnableHomeTextBuffer            = D1AA36
-__seqcase                           = 000210
 __setflag                           = 000218
 __imul_b                            = 000158
 __imul_b                            = 000150
 __frameset0                         = D1AA48
 __frameset                          = D1AA53
 __stoiu                             = 000264
-_memcpy                             = 0000A4
 __iremu                             = 000170
 __ishru_b                           = 000184
 __ishru_b                           = 000188
 _srand                              = D1AA61
 __icmpzero                          = D1AA69
-__case8                             = 000124
 __findlibload                       = D1A882
 __ccleanup                          = D1A99C
 _errno                              = D008DC
@@ -156,53 +153,66 @@ _exit                               = D1A9B2
 __exit                              = D1A98B
 __exitsp                            = D1A98B
 __errsp                             = D1A98B
-_caisse_data                        = D1BED0
-_caisse_ok_data                     = D1BFD2
-_chicken_down_data                  = D1C0D4
-_chicken_left_data                  = D1C1D6
-_chicken_right_data                 = D1C2D8
-_chicken_up_data                    = D1C3DA
-_doctor_chicken_data                = D1C4DC
-_grass_data                         = D1C52B
-_intro_data                         = D1C62D
-_levels                             = D2036F
-_FadeOut                            = D1BE69
-_FadeIn                             = D1BE33
-_nopwait                            = D1BE05
-_print_string_centered              = D1BDD0
-_endGame                            = D1BD55
-_newGame                            = D1BB91
-_game                               = D1BB28
-_draw_Stats                         = D1B935
-_menu                               = D1B73E
-_draw_menu                          = D1B676
-_draw_background                    = D1B4E2
-_check_victory                      = D1B450
-_colide                             = D1B0BB
-_update                             = D1AFF6
-_render                             = D1AD12
-_generate                           = D1ABF9
-_main                               = D1AA6E
-_normalB                            = D06DBA
-_maxBrightness                      = D23E1B
-_minBrightness                      = D23E1A
-_brightness                         = D23E17
-_language                           = D23E16
-_Pushs                              = D06D24
-_Moves                              = D06C8E
-_level                              = D031F6
-_maxLvl                             = D23E15
-_nbLvl                              = D23E14
-_moves                              = D23E11
-_push                               = D23E0E
-_nbCaisseOk                         = D23E0D
-_nbObj                              = D23E0C
-_x                                  = D23E0B
-_y                                  = D23E0A
-_chicken                            = D23E07
-_mur_data                           = D23E1C
-_objectif_data                      = D23F1E
-_sprites_gfx_pal                    = D24020
+_print_string_centered              = D1B1BF
+_updateStats                        = D1B15A
+_updateMenu                         = D1B04B
+_renderMenu                         = D1AF5E
+_renderBackground                   = D1ADCA
+_end                                = D1AD64
+_introd                             = D1ABD7
+_renderStats                        = D1AA6E
+_yPos                               = D1BD5B
+_page                               = D1BD5A
+_nopwait                            = D1B25C
+_exitFade                           = D1B253
+_initFade                           = D1B24A
+_FadeOut                            = D1B21F
+_FadeIn                             = D1B1F4
+_levelLight                         = D1BD5C
+_initCase                           = D1B957
+_initChicken                        = D1B929
+_generate                           = D1B866
+_endGame                            = D1B83C
+_newGame                            = D1B7E6
+_startGame                          = D1B7D8
+_check_victory                      = D1B71F
+_collide                            = D1B4B6
+_updateGame                         = D1B3DB
+_renderGame                         = D1B28A
+_caisse_data                        = D1BD5D
+_caisse_ok_data                     = D1BE5F
+_chicken_down_data                  = D1BF61
+_chicken_left_data                  = D1C063
+_chicken_right_data                 = D1C165
+_chicken_up_data                    = D1C267
+_doctor_chicken_data                = D1C369
+_grass_data                         = D1C3B8
+_intro_data                         = D1C4BA
+_objectif_data                      = D201FC
+_sprites_gfx_pal                    = D202FE
+_wall_data                          = D2045E
+_key                                = D1BB25
+_setPreKey                          = D1BAE8
+_setKey                             = D1BA7D
+_key_right                          = D03200
+_key_left                           = D031FE
+_key_down                           = D031FC
+_key_up                             = D031FA
+_key_Del                            = D031F8
+_key_2nd                            = D031F6
+_levels                             = D20560
+_render                             = D1BCF3
+_update                             = D1BCBE
+_main                               = D1BB54
+_level                              = D03339
+_chicken                            = D0332E
+_Pushs                              = D03298
+_Moves                              = D03202
+_gameState                          = D23FFC
+_maxLvl                             = D23FFB
+_curentLevel                        = D23FFA
+_nbCaisseOk                         = D23FF9
+_nbObj                              = D23FF8
 _ti_CloseAll                        = D1A8EE
 _ti_Open                            = D1A8F2
 _ti_Write                           = D1A8F6
@@ -225,4 +235,4 @@ _gfx_FillRectangle                  = D1A93F
 _gfx_Sprite                         = D1A943
 _gfx_TransparentSprite              = D1A947
 _gfx_ScaledTransparentSprite_NoClip = D1A94B
-_kb_ScanGroup                       = D1A959
+_kb_Scan                            = D1A959

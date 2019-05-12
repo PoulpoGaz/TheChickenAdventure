@@ -1,0 +1,1310 @@
+; Zilog eZ80 ANSI C Compiler Release 3.4
+; -optsize -noreduceopt -nomodsect -peephole -globalopt
+; -localcse -const=ROM 
+	FILE	"SRC\COMMON.C"
+	.assume ADL=1
+	SEGMENT DATA
+_page:
+	DB	0
+_yPos:
+	DB	140
+;    1	#include "common.h"
+;    2	
+;    3	uint8_t page = 0;
+;    4	uint8_t yPos = 140;
+	SEGMENT CODE
+;    5	
+;    6	void renderStats() {
+_renderStats:
+	LD	HL,-12
+	CALL	__frameset
+;    7	    uint8_t i, f=page*15, g=0;
+	LD	A,(_page)
+	LD	B,A
+	LD	C,15
+	MLT	BC
+	LD	(IX+-3),C
+;    8	    renderBackground(false);
+	LD	BC,0
+	PUSH	BC
+	CALL	_renderBackground
+	POP	BC
+;    9	    for(i=0; i<15;i++) {
+	LD	(IX+-1),0
+	JR	L_8
+L_6:
+;   10	        g=i+f;
+	LD	A,(IX+-1)
+	ADD	A,(IX+-3)
+	LD	(IX+-2),A
+;   11	        if(g==50) break;
+	CP	A,50
+	JR	Z,L_9
+;   12	        gfx_PrintStringXY("Level: ",0,i*15);
+	LD	A,(IX+-1)
+	UEXT	HL
+	LD	L,A
+	LD	A,15
+	CALL	__imul_b
+	PUSH	HL
+	LD	BC,0
+	PUSH	BC
+	LD	BC,L__1
+	PUSH	BC
+	CALL	_gfx_PrintStringXY
+	POP	BC
+	POP	BC
+	POP	BC
+;   13	        gfx_SetTextXY(50,i*15);
+	LD	A,(IX+-1)
+	UEXT	HL
+	LD	L,A
+	LD	A,15
+	CALL	__imul_b
+	PUSH	HL
+	LD	BC,50
+	PUSH	BC
+	CALL	_gfx_SetTextXY
+	POP	BC
+	POP	BC
+;   14	        gfx_PrintUInt(g+1, 2);
+	LD	BC,2
+	PUSH	BC
+	LD	A,(IX+-2)
+	UEXT	HL
+	LD	L,A
+	INC	HL
+	PUSH	HL
+	CALL	_gfx_PrintUInt
+	POP	BC
+	POP	BC
+;   15	        gfx_PrintStringXY("Moves: ", 80,i*15);
+	LD	A,(IX+-1)
+	UEXT	HL
+	LD	L,A
+	LD	A,15
+	CALL	__imul_b
+	PUSH	HL
+	LD	BC,80
+	PUSH	BC
+	LD	BC,L__2
+	PUSH	BC
+	CALL	_gfx_PrintStringXY
+	POP	BC
+	POP	BC
+	POP	BC
+;   16	        if(Moves[g]!=0) {
+	LD	A,(IX+-2)
+	UEXT	HL
+	LD	L,A
+	LD	BC,HL
+	ADD	HL,HL
+	ADD	HL,BC
+	LD	(IX+-9),HL
+	LD	BC,_Moves
+	ADD	HL,BC
+	LD	(IX+-12),HL
+	LD	HL,(HL)
+	CALL	__icmpzero
+	JR	Z,L_4
+;   17	            gfx_SetTextXY(140,i*15);
+	LD	A,(IX+-1)
+	UEXT	HL
+	LD	L,A
+	LD	A,15
+	CALL	__imul_b
+	PUSH	HL
+	LD	BC,140
+	PUSH	BC
+	CALL	_gfx_SetTextXY
+	POP	BC
+	POP	BC
+;   18	            gfx_PrintUInt(Moves[g], 5);
+	LD	BC,5
+	PUSH	BC
+	LD	HL,(IX+-12)
+	LD	BC,(HL)
+	PUSH	BC
+	CALL	_gfx_PrintUInt
+	POP	BC
+	POP	BC
+;   19	        }
+L_4:
+;   20	        gfx_PrintStringXY("Pushs: ", 190, i*15);
+	LD	A,(IX+-1)
+	UEXT	HL
+	LD	L,A
+	LD	A,15
+	CALL	__imul_b
+	PUSH	HL
+	LD	BC,190
+	PUSH	BC
+	LD	BC,L__4
+	PUSH	BC
+	CALL	_gfx_PrintStringXY
+	POP	BC
+	POP	BC
+	POP	BC
+;   21	        if(Pushs[g]!=0) {
+	LD	BC,(IX+-9)
+	LD	HL,_Pushs
+	ADD	HL,BC
+	LD	(IX+-6),HL
+	LD	HL,(HL)
+	CALL	__icmpzero
+	JR	Z,L_7
+;   22	            gfx_SetTextXY(250, i*15);
+	LD	A,(IX+-1)
+	UEXT	HL
+	LD	L,A
+	LD	A,15
+	CALL	__imul_b
+	PUSH	HL
+	LD	BC,250
+	PUSH	BC
+	CALL	_gfx_SetTextXY
+	POP	BC
+	POP	BC
+;   23	            gfx_PrintUInt(Pushs[g],5);
+	LD	BC,5
+	PUSH	BC
+	LD	HL,(IX+-6)
+	LD	BC,(HL)
+	PUSH	BC
+	CALL	_gfx_PrintUInt
+	POP	BC
+	POP	BC
+;   24	        }
+;   25	    }
+L_7:
+	INC	(IX+-1)
+L_8:
+	LD	A,(IX+-1)
+	CP	A,15
+	JR	C,L_6
+L_9:
+;   26	    print_string_centered("[<>]-deplacer [Del]-retour",230);
+	LD	BC,230
+	PUSH	BC
+	LD	BC,L__7
+	PUSH	BC
+	CALL	_print_string_centered
+	POP	BC
+	POP	BC
+;   27	    gfx_SwapDraw();
+	CALL	_gfx_SwapDraw
+;   28	}
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _renderStats ***************************
+;Name                         Addr/Register   Size   Type
+;_gfx_SwapDraw                       IMPORT  -----   function
+;_print_string_centered              IMPORT  -----   function
+;_Pushs                              IMPORT    150   variable
+;_Moves                              IMPORT    150   variable
+;_gfx_PrintUInt                      IMPORT  -----   function
+;_gfx_SetTextXY                      IMPORT  -----   function
+;_gfx_PrintStringXY                  IMPORT  -----   function
+;_renderBackground                   IMPORT  -----   function
+;_page                               STATIC      1   variable
+;G_0                                  IX-12      3   variable
+;G_1                                   IX-9      3   variable
+;G_2                                   IX-6      3   variable
+;f                                     IX-3      1   variable
+;g                                     IX-2      1   variable
+;i                                     IX-1      1   variable
+
+
+; Stack Frame Size: 18 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+	SEGMENT STRSECT
+L__1:
+	DB	"Level: "
+	DB	0
+L__2:
+	DB	"Moves: "
+	DB	0
+L__4:
+	DB	"Pushs: "
+	DB	0
+L__7:
+	DB	"[<>]-deplacer [Del]-retour"
+	DB	0
+	SEGMENT CODE
+;   29	
+;   30	void introd() {
+_introd:
+	LD	HL,-2
+	CALL	__frameset
+;   31		uint8_t a, b;
+;   32		gfx_SetColor(0x09);
+	LD	BC,9
+	PUSH	BC
+	CALL	_gfx_SetColor
+	POP	BC
+;   33	    gfx_FillRectangle(0,0,320,240);
+	LD	BC,240
+	PUSH	BC
+	LD	BC,320
+	PUSH	BC
+	LD	BC,0
+	PUSH	BC
+	PUSH	BC
+	CALL	_gfx_FillRectangle
+	POP	BC
+	POP	BC
+	POP	BC
+	POP	BC
+;   34	    gfx_ScaledTransparentSprite_NoClip(intro,0,0,2,2);
+	LD	BC,2
+	PUSH	BC
+	PUSH	BC
+	LD	BC,0
+	PUSH	BC
+	PUSH	BC
+	LD	BC,_intro_data
+	PUSH	BC
+	CALL	_gfx_ScaledTransparentSprite_NoClip
+	POP	BC
+	POP	BC
+	POP	BC
+	POP	BC
+	POP	BC
+;   35	    print_string_centered("En l'an 0, la lune s'ecrasa sur Terre apres",200);
+	LD	BC,200
+	PUSH	BC
+	LD	BC,L__9
+	PUSH	BC
+	CALL	_print_string_centered
+	POP	BC
+	POP	BC
+;   36	    print_string_centered("s'etre fait posseder par Super Poulet.",210);
+	LD	BC,210
+	PUSH	BC
+	LD	BC,L__10
+	PUSH	BC
+	CALL	_print_string_centered
+	POP	BC
+	POP	BC
+;   37	    print_string_centered("Les humains furent convertis en poulet...",220);
+	LD	BC,220
+	PUSH	BC
+	LD	BC,L__11
+	PUSH	BC
+	CALL	_print_string_centered
+	POP	BC
+	POP	BC
+;   38	    gfx_SwapDraw();
+	CALL	_gfx_SwapDraw
+;   39	    while(!os_GetCSC());
+L_12:
+	CALL	_os_GetCSC
+	OR	A,A
+	JR	Z,L_12
+;   40	    gfx_FillRectangle(0,0,320,240);
+	LD	BC,240
+	PUSH	BC
+	LD	BC,320
+	PUSH	BC
+	LD	BC,0
+	PUSH	BC
+	PUSH	BC
+	CALL	_gfx_FillRectangle
+	POP	BC
+	POP	BC
+	POP	BC
+	POP	BC
+;   41	    for(a=1; a*28<292; a++) {
+	LD	(IX+-1),1
+	JR	L_20
+L_18:
+;   42	        for(b=0; b*28<160; b+=2) {
+	LD	(IX+-2),0
+	JR	L_17
+L_15:
+;   43	            gfx_ScaledTransparentSprite_NoClip(doctor_chicken,a*28,b*28,4,4);
+	LD	B,28
+	LD	DE,4
+	PUSH	DE
+	PUSH	DE
+	LD	C,(IX+-2)
+	MLT	BC
+	LD	B,0
+	PUSH	BC
+	LD	A,(IX+-1)
+	UEXT	HL
+	LD	L,A
+	LD	A,28
+	CALL	__imul_b
+	PUSH	HL
+	LD	BC,_doctor_chicken_data
+	PUSH	BC
+	CALL	_gfx_ScaledTransparentSprite_NoClip
+	POP	BC
+	POP	BC
+	POP	BC
+	POP	BC
+	POP	BC
+;   44	            gfx_ScaledTransparentSprite_NoClip(doctor_chicken,a*28-17,b*28+28,4,4);
+	LD	B,28
+	LD	DE,4
+	PUSH	DE
+	PUSH	DE
+	LD	C,(IX+-2)
+	MLT	BC
+	LD	A,C
+	ADD	A,28
+	LD	C,A
+	LD	B,0
+	PUSH	BC
+	LD	A,(IX+-1)
+	UEXT	HL
+	LD	L,A
+	LD	A,28
+	CALL	__imul_b
+	LD	IY,HL
+	LEA	BC,IY+-17
+	PUSH	BC
+	LD	BC,_doctor_chicken_data
+	PUSH	BC
+	CALL	_gfx_ScaledTransparentSprite_NoClip
+	POP	BC
+	POP	BC
+	POP	BC
+	POP	BC
+	POP	BC
+	INC	(IX+-2)
+	INC	(IX+-2)
+;   45	        }
+L_17:
+	LD	A,(IX+-2)
+	UEXT	HL
+	LD	L,A
+	LD	A,28
+	CALL	__imul_b
+	OR	A,A
+	LD	BC,160
+	SBC	HL,BC
+	JP	M,L_15
+	INC	(IX+-1)
+;   46	    }
+L_20:
+	LD	A,(IX+-1)
+	UEXT	HL
+	LD	L,A
+	LD	A,28
+	CALL	__imul_b
+	OR	A,A
+	LD	BC,292
+	SBC	HL,BC
+	CALL	__setflag
+	JP	M,L_18
+;   47	    print_string_centered("En 93632 apSP, les chercheurs poulets ont",200);
+	LD	BC,200
+	PUSH	BC
+	LD	BC,L__15
+	PUSH	BC
+	CALL	_print_string_centered
+	POP	BC
+	POP	BC
+;   48	    print_string_centered("trouve le moyen de revenir a leur etat",210);
+	LD	BC,210
+	PUSH	BC
+	LD	BC,L__16
+	PUSH	BC
+	CALL	_print_string_centered
+	POP	BC
+	POP	BC
+;   49	    print_string_centered("naturel. Il faut qu'ils rangent des caisses...",220);
+	LD	BC,220
+	PUSH	BC
+	LD	BC,L__17
+	PUSH	BC
+	CALL	_print_string_centered
+	POP	BC
+	POP	BC
+;   50	    gfx_SwapDraw();
+	CALL	_gfx_SwapDraw
+;   51	    while(!os_GetCSC());
+L_23:
+	CALL	_os_GetCSC
+	OR	A,A
+	JR	Z,L_23
+;   52	    gameState = GAME;
+	LD	BC,2
+	LD	(_gameState),BC
+;   53	}
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _introd ***************************
+;Name                         Addr/Register   Size   Type
+;_gameState                          IMPORT      3   variable
+;_doctor_chicken_data                IMPORT     79   variable
+;_os_GetCSC                          IMPORT  -----   function
+;_gfx_SwapDraw                       IMPORT  -----   function
+;_print_string_centered              IMPORT  -----   function
+;_intro_data                         IMPORT  15682   variable
+;_gfx_ScaledTransparentSprite_NoClip      IMPORT  -----   function
+;_gfx_FillRectangle                  IMPORT  -----   function
+;_gfx_SetColor                       IMPORT  -----   function
+;b                                     IX-2      1   variable
+;a                                     IX-1      1   variable
+
+
+; Stack Frame Size: 8 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+	SEGMENT STRSECT
+L__9:
+	DB	"En l'an 0, la lune s'ecrasa sur Terre apres"
+	DB	0
+L__10:
+	DB	"s'etre fait posseder par Super Poulet."
+	DB	0
+L__11:
+	DB	"Les humains furent convertis en poulet..."
+	DB	0
+L__15:
+	DB	"En 93632 apSP, les chercheurs poulets ont"
+	DB	0
+L__16:
+	DB	"trouve le moyen de revenir a leur etat"
+	DB	0
+L__17:
+	DB	"naturel. Il faut qu'ils rangent des caisses..."
+	DB	0
+	SEGMENT CODE
+;   54	
+;   55	void end() {
+_end:
+;   56		renderBackground(true);
+	LD	BC,1
+	PUSH	BC
+	CALL	_renderBackground
+	POP	BC
+;   57	    print_string_centered("Apres plusieurs mois de rangement intense,",120);
+	LD	BC,120
+	PUSH	BC
+	LD	BC,L__20
+	PUSH	BC
+	CALL	_print_string_centered
+	POP	BC
+	POP	BC
+;   58	    print_string_centered("Super Poulet partit, effraye par ce rangement!",140);
+	LD	BC,140
+	PUSH	BC
+	LD	BC,L__21
+	PUSH	BC
+	CALL	_print_string_centered
+	POP	BC
+	POP	BC
+;   59	    print_string_centered("Les poulets furent convertis en humains...",160);
+	LD	BC,160
+	PUSH	BC
+	LD	BC,L__22
+	PUSH	BC
+	CALL	_print_string_centered
+	POP	BC
+	POP	BC
+;   60	    print_string_centered("Merci d'avoir joue!",200);
+	LD	BC,200
+	PUSH	BC
+	LD	BC,L__23
+	PUSH	BC
+	CALL	_print_string_centered
+	POP	BC
+	POP	BC
+;   61	    print_string_centered("A suivre... peut etre... c'est pas sur...",230);
+	LD	BC,230
+	PUSH	BC
+	LD	BC,L__24
+	PUSH	BC
+	CALL	_print_string_centered
+	POP	BC
+	POP	BC
+;   62	    gfx_SwapDraw();
+	CALL	_gfx_SwapDraw
+;   63	    while(!os_GetCSC());
+L_27:
+	CALL	_os_GetCSC
+	OR	A,A
+	JR	Z,L_27
+;   64	}
+	RET	
+
+
+;**************************** _end ***************************
+;Name                         Addr/Register   Size   Type
+;_os_GetCSC                          IMPORT  -----   function
+;_gfx_SwapDraw                       IMPORT  -----   function
+;_print_string_centered              IMPORT  -----   function
+;_renderBackground                   IMPORT  -----   function
+
+
+; Stack Frame Size: 6 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+	SEGMENT STRSECT
+L__20:
+	DB	"Apres plusieurs mois de rangement intense,"
+	DB	0
+L__21:
+	DB	"Super Poulet partit, effraye par ce rangement!"
+	DB	0
+L__22:
+	DB	"Les poulets furent convertis en humains..."
+	DB	0
+L__23:
+	DB	"Merci d'avoir joue!"
+	DB	0
+L__24:
+	DB	"A suivre... peut etre... c'est pas sur..."
+	DB	0
+	SEGMENT CODE
+;   65	
+;   66	void renderBackground(bool title) {
+_renderBackground:
+	LD	HL,-5
+	CALL	__frameset
+;   67	    uint8_t a, yy,l;
+;   68	    uint16_t xx;
+;   69	    gfx_FillScreen(0xAF);
+	LD	BC,175
+	PUSH	BC
+	CALL	_gfx_FillScreen
+	POP	BC
+;   70	    gfx_SetColor(0x03); gfx_FillCircle(160,240,170);
+	LD	BC,3
+	PUSH	BC
+	CALL	_gfx_SetColor
+	POP	BC
+	LD	BC,170
+	PUSH	BC
+	LD	BC,240
+	PUSH	BC
+	LD	BC,160
+	PUSH	BC
+	CALL	_gfx_FillCircle
+	POP	BC
+	POP	BC
+	POP	BC
+;   71	    gfx_SetColor(0x11); gfx_FillCircle(160,240,140);
+	LD	BC,17
+	PUSH	BC
+	CALL	_gfx_SetColor
+	POP	BC
+	LD	BC,140
+	PUSH	BC
+	LD	BC,240
+	PUSH	BC
+	LD	BC,160
+	PUSH	BC
+	CALL	_gfx_FillCircle
+	POP	BC
+	POP	BC
+	POP	BC
+;   72	    gfx_SetColor(0x3F); gfx_FillCircle(160,240,110);
+	LD	BC,63
+	PUSH	BC
+	CALL	_gfx_SetColor
+	POP	BC
+	LD	BC,110
+	PUSH	BC
+	LD	BC,240
+	PUSH	BC
+	LD	BC,160
+	PUSH	BC
+	CALL	_gfx_FillCircle
+	POP	BC
+	POP	BC
+	POP	BC
+;   73	    gfx_SetColor(0x06); gfx_FillCircle(160,240,90);
+	LD	BC,6
+	PUSH	BC
+	CALL	_gfx_SetColor
+	POP	BC
+	LD	BC,90
+	PUSH	BC
+	LD	BC,240
+	PUSH	BC
+	LD	BC,160
+	PUSH	BC
+	CALL	_gfx_FillCircle
+	POP	BC
+	POP	BC
+	POP	BC
+;   74	    gfx_SetColor(0x32); gfx_FillCircle(160,240,70);
+	LD	BC,50
+	PUSH	BC
+	CALL	_gfx_SetColor
+	POP	BC
+	LD	BC,70
+	PUSH	BC
+	LD	BC,240
+	PUSH	BC
+	LD	BC,160
+	PUSH	BC
+	CALL	_gfx_FillCircle
+	POP	BC
+	POP	BC
+	POP	BC
+;   75	    gfx_SetColor(0x28); gfx_FillCircle(160,240,50);
+	LD	BC,40
+	PUSH	BC
+	CALL	_gfx_SetColor
+	POP	BC
+	LD	BC,50
+	PUSH	BC
+	LD	BC,240
+	PUSH	BC
+	LD	BC,160
+	PUSH	BC
+	CALL	_gfx_FillCircle
+	POP	BC
+	POP	BC
+	POP	BC
+;   76	    gfx_SetColor(0x0E);
+	LD	BC,14
+	PUSH	BC
+	CALL	_gfx_SetColor
+	POP	BC
+;   77	    for(a=0; a<randInt(70,90); a++) {
+	LD	(IX+-1),0
+	JR	L_32
+L_30:
+;   78	        xx=randInt(0,320); yy=randInt(0,100); l=randInt(1,2);
+	CALL	_random
+	LD	BC,321
+	CALL	__iremu
+	LD	(IX+-5),L
+	LD	(IX+-4),H
+	CALL	_random
+	LD	BC,101
+	CALL	__iremu
+	LD	(IX+-3),L
+	CALL	_random
+	LD	A,L
+	AND	A,1
+	UEXT	HL
+	LD	L,A
+	INC	HL
+	LD	(IX+-2),L
+;   79	        gfx_FillRectangle(xx,yy,l,l);
+	LD	A,(IX+-2)
+	UEXT	HL
+	LD	L,A
+	PUSH	HL
+	LD	A,(IX+-2)
+	UEXT	HL
+	LD	L,A
+	PUSH	HL
+	LD	A,(IX+-3)
+	UEXT	HL
+	LD	L,A
+	PUSH	HL
+	LD	BC,(IX+-5)
+	CALL	__stoiu
+	PUSH	HL
+	CALL	_gfx_FillRectangle
+	POP	BC
+	POP	BC
+	POP	BC
+	POP	BC
+	INC	(IX+-1)
+;   80	    }
+L_32:
+	CALL	_random
+	LD	BC,21
+	CALL	__iremu
+	LD	IY,HL
+	LD	A,(IX+-1)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LEA	BC,IY+70
+	SBC	HL,BC
+	JR	C,L_30
+;   81	    if(title) {
+	LD	A,(IX+6)
+	OR	A,A
+	JR	Z,L_35
+;   82	        gfx_ScaledTransparentSprite_NoClip(chicken_down,140,102,2,2);
+	LD	BC,2
+	PUSH	BC
+	PUSH	BC
+	LD	BC,102
+	PUSH	BC
+	LD	BC,140
+	PUSH	BC
+	LD	BC,_chicken_down_data
+	PUSH	BC
+	CALL	_gfx_ScaledTransparentSprite_NoClip
+	POP	BC
+	POP	BC
+	POP	BC
+	POP	BC
+	POP	BC
+;   83	        print_string_centered("THE CHICKEN ADVENTURE I", 50);
+	LD	BC,50
+	PUSH	BC
+	LD	BC,L__29
+	PUSH	BC
+	CALL	_print_string_centered
+	POP	BC
+	POP	BC
+;   84	    }
+;   85	}
+L_35:
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _renderBackground ***************************
+;Name                         Addr/Register   Size   Type
+;_print_string_centered              IMPORT  -----   function
+;_chicken_down_data                  IMPORT    258   variable
+;_gfx_ScaledTransparentSprite_NoClip      IMPORT  -----   function
+;_gfx_FillRectangle                  IMPORT  -----   function
+;_random                             IMPORT  -----   function
+;_gfx_FillCircle                     IMPORT  -----   function
+;_gfx_SetColor                       IMPORT  -----   function
+;_gfx_FillScreen                     IMPORT  -----   function
+;xx                                    IX-5      2   variable
+;yy                                    IX-3      1   variable
+;l                                     IX-2      1   variable
+;a                                     IX-1      1   variable
+;title                                 IX+6      1   parameter
+
+
+; Stack Frame Size: 14 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+	SEGMENT STRSECT
+L__29:
+	DB	"THE CHICKEN ADVENTURE I"
+	DB	0
+	SEGMENT CODE
+;   86	
+;   87	void renderMenu() {
+_renderMenu:
+;   88	    renderBackground(true);
+	LD	BC,1
+	PUSH	BC
+	CALL	_renderBackground
+	POP	BC
+;   89	    gfx_SetColor(0x00); gfx_FillRectangle(95,yPos+2,8,2);
+	LD	BC,0
+	PUSH	BC
+	CALL	_gfx_SetColor
+	POP	BC
+	LD	A,(_yPos)
+	UEXT	HL
+	LD	L,A
+	LD	BC,2
+	PUSH	BC
+	INC	HL
+	LD	BC,8
+	PUSH	BC
+	INC	HL
+	PUSH	HL
+	LD	BC,95
+	PUSH	BC
+	CALL	_gfx_FillRectangle
+	POP	BC
+	POP	BC
+	POP	BC
+	POP	BC
+;   90	    print_string_centered("Continuer", 140);
+	LD	BC,140
+	PUSH	BC
+	LD	BC,L__31
+	PUSH	BC
+	CALL	_print_string_centered
+	POP	BC
+	POP	BC
+;   91	    gfx_PrintStringXY("<      >", 210,140);
+	LD	BC,140
+	PUSH	BC
+	LD	BC,210
+	PUSH	BC
+	LD	BC,L__32
+	PUSH	BC
+	CALL	_gfx_PrintStringXY
+	POP	BC
+	POP	BC
+	POP	BC
+;   92	    gfx_SetTextXY((gfx_lcdWidth/2)+gfx_GetStringWidth("Continuer")-10,140);
+	LD	BC,140
+	PUSH	BC
+	LD	BC,L__33
+	PUSH	BC
+	CALL	_gfx_GetStringWidth
+	POP	BC
+	LD	BC,150
+	ADD	HL,BC
+	PUSH	HL
+	CALL	_gfx_SetTextXY
+	POP	BC
+	POP	BC
+;   93	    gfx_PrintUInt(curentLevel+1, 2);
+	LD	A,(_curentLevel)
+	UEXT	HL
+	LD	L,A
+	LD	BC,2
+	PUSH	BC
+	INC	HL
+	PUSH	HL
+	CALL	_gfx_PrintUInt
+	POP	BC
+	POP	BC
+;   94	    print_string_centered("Nouvelle partie",160);
+	LD	BC,160
+	PUSH	BC
+	LD	BC,L__34
+	PUSH	BC
+	CALL	_print_string_centered
+	POP	BC
+	POP	BC
+;   95	    print_string_centered("Stats",180);
+	LD	BC,180
+	PUSH	BC
+	LD	BC,L__35
+	PUSH	BC
+	CALL	_print_string_centered
+	POP	BC
+	POP	BC
+;   96	    print_string_centered("Quitter",200);
+	LD	BC,200
+	PUSH	BC
+	LD	BC,L__36
+	PUSH	BC
+	CALL	_print_string_centered
+	POP	BC
+	POP	BC
+;   97	
+;   98	    gfx_PrintStringXY("V2.0", 290, 230);
+	LD	BC,230
+	PUSH	BC
+	LD	BC,290
+	PUSH	BC
+	LD	BC,L__37
+	PUSH	BC
+	CALL	_gfx_PrintStringXY
+	POP	BC
+	POP	BC
+	POP	BC
+;   99	    gfx_PrintStringXY("PoulpoCorp (C)", 0, 230);
+	LD	BC,230
+	PUSH	BC
+	LD	BC,0
+	PUSH	BC
+	LD	BC,L__38
+	PUSH	BC
+	CALL	_gfx_PrintStringXY
+	POP	BC
+	POP	BC
+	POP	BC
+;  100	    gfx_SwapDraw();
+	CALL	_gfx_SwapDraw
+;  101	}
+	RET	
+
+
+;**************************** _renderMenu ***************************
+;Name                         Addr/Register   Size   Type
+;_gfx_SwapDraw                       IMPORT  -----   function
+;_curentLevel                        IMPORT      1   variable
+;_gfx_PrintUInt                      IMPORT  -----   function
+;_gfx_GetStringWidth                 IMPORT  -----   function
+;_gfx_SetTextXY                      IMPORT  -----   function
+;_gfx_PrintStringXY                  IMPORT  -----   function
+;_print_string_centered              IMPORT  -----   function
+;_yPos                               STATIC      1   variable
+;_gfx_FillRectangle                  IMPORT  -----   function
+;_gfx_SetColor                       IMPORT  -----   function
+;_renderBackground                   IMPORT  -----   function
+
+
+; Stack Frame Size: 6 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+	SEGMENT STRSECT
+L__31:
+	DB	"Continuer"
+	DB	0
+L__32:
+	DB	"<      >"
+	DB	0
+L__33:
+	DB	"Continuer"
+	DB	0
+L__34:
+	DB	"Nouvelle partie"
+	DB	0
+L__35:
+	DB	"Stats"
+	DB	0
+L__36:
+	DB	"Quitter"
+	DB	0
+L__37:
+	DB	"V2.0"
+	DB	0
+L__38:
+	DB	"PoulpoCorp (C)"
+	DB	0
+	SEGMENT CODE
+;  102	
+;  103	void updateMenu() {
+_updateMenu:
+;  104		if(key(key_down)) {
+	LD	BC,_key_down
+	PUSH	BC
+	CALL	_key
+	POP	BC
+	OR	A,A
+	JR	Z,L_62
+;  105			if(yPos == 200) {
+	LD	A,(_yPos)
+	CP	A,200
+	JR	NZ,L_38
+;  106				yPos = 140;
+	LD	A,140
+	LD	(_yPos),A
+;  107			} else {
+	JR	L_63
+L_38:
+;  108				yPos+=20;
+	LD	A,(_yPos)
+	ADD	A,20
+	LD	(_yPos),A
+;  109			}
+;  110		} else if(key(key_up)) {
+	JR	L_63
+L_62:
+	LD	BC,_key_up
+	PUSH	BC
+	CALL	_key
+	POP	BC
+	OR	A,A
+	JR	Z,L_60
+;  111			if(yPos == 140) {
+	LD	A,(_yPos)
+	CP	A,140
+	JR	NZ,L_40
+;  112				yPos = 200;
+	LD	A,200
+	LD	(_yPos),A
+;  113			} else {
+	JR	L_63
+L_40:
+;  114				yPos-=20;
+	LD	A,(_yPos)
+	SUB	A,20
+	LD	(_yPos),A
+;  115			}
+;  116		} else if(key(key_2nd)) {
+	JR	L_63
+L_60:
+	LD	BC,_key_2nd
+	PUSH	BC
+	CALL	_key
+	POP	BC
+	OR	A,A
+	JR	Z,L_58
+;  117			if(yPos == 140) {
+	LD	A,(_yPos)
+	CP	A,140
+	JR	NZ,L_47
+;  118				gameState = GAME;
+	LD	BC,2
+	LD	(_gameState),BC
+;  119				startGame();
+	CALL	_startGame
+;  120			} else if(yPos == 160) {
+	JR	L_63
+L_47:
+	LD	A,(_yPos)
+	CP	A,160
+	JR	NZ,L_45
+;  121				newGame();
+	CALL	_newGame
+;  122			} else if(yPos == 180) {
+	JR	L_63
+L_45:
+	LD	A,(_yPos)
+	CP	A,180
+	JR	NZ,L_43
+;  123				gameState = STATS;
+	LD	BC,1
+	LD	(_gameState),BC
+;  124			} else if(yPos == 200) {
+	JR	L_63
+L_43:
+	LD	A,(_yPos)
+	CP	A,200
+	JR	NZ,L_63
+;  125				gameState = EXIT;
+	LD	BC,3
+	LD	(_gameState),BC
+;  126			}
+;  127		} else if(key(key_Del)) {
+	JR	L_63
+L_58:
+	LD	BC,_key_Del
+	PUSH	BC
+	CALL	_key
+	POP	BC
+	OR	A,A
+	JR	Z,L_56
+;  128			gameState = EXIT;
+	LD	BC,3
+	LD	(_gameState),BC
+;  129		} else if(key(key_left)) {
+	JR	L_63
+L_56:
+	LD	BC,_key_left
+	PUSH	BC
+	CALL	_key
+	POP	BC
+	OR	A,A
+	JR	Z,L_54
+;  130			if(curentLevel != 0) {
+	LD	A,(_curentLevel)
+	OR	A,A
+	JR	Z,L_63
+;  131				curentLevel--;
+	LD	A,(_curentLevel)
+	DEC	A
+	LD	(_curentLevel),A
+;  132			}
+;  133		} else if(key(key_right)) {
+	JR	L_63
+L_54:
+	LD	BC,_key_right
+	PUSH	BC
+	CALL	_key
+	POP	BC
+	OR	A,A
+	JR	Z,L_63
+;  134			if(curentLevel != maxLvl) {
+	LD	A,(_curentLevel)
+	LD	HL,_maxLvl
+	CP	A,(HL)
+	JR	Z,L_63
+;  135				curentLevel++;
+	LD	A,(_curentLevel)
+	INC	A
+	LD	(_curentLevel),A
+;  136			}
+;  137		}
+;  138	}
+L_63:
+	RET	
+
+
+;**************************** _updateMenu ***************************
+;Name                         Addr/Register   Size   Type
+;_maxLvl                             IMPORT      1   variable
+;_key_right                          IMPORT      2   variable
+;_curentLevel                        IMPORT      1   variable
+;_key_left                           IMPORT      2   variable
+;_key_Del                            IMPORT      2   variable
+;_newGame                            IMPORT  -----   function
+;_startGame                          IMPORT  -----   function
+;_gameState                          IMPORT      3   variable
+;_key_2nd                            IMPORT      2   variable
+;_key_up                             IMPORT      2   variable
+;_yPos                               STATIC      1   variable
+;_key_down                           IMPORT      2   variable
+;_key                                IMPORT  -----   function
+
+
+; Stack Frame Size: 6 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+;  139	
+;  140	void updateStats() {
+_updateStats:
+;  141		if(key(key_left)) {
+	LD	BC,_key_left
+	PUSH	BC
+	CALL	_key
+	POP	BC
+	OR	A,A
+	JR	Z,L_74
+;  142			if(page == 0) {
+	LD	A,(_page)
+	OR	A,A
+	JR	NZ,L_66
+;  143				page = 3;
+	LD	A,3
+	LD	(_page),A
+;  144			} else {
+	JR	L_75
+L_66:
+;  145				page--;
+	LD	A,(_page)
+	DEC	A
+	LD	(_page),A
+;  146			}
+;  147		} else if(key(key_right)) {
+	JR	L_75
+L_74:
+	LD	BC,_key_right
+	PUSH	BC
+	CALL	_key
+	POP	BC
+	OR	A,A
+	JR	Z,L_72
+;  148			if(page == 3) {
+	LD	A,(_page)
+	CP	A,3
+	JR	NZ,L_69
+;  149				page = 0;
+	XOR	A,A
+	LD	(_page),A
+;  150			} else {
+	JR	L_75
+L_69:
+;  151				page++;
+	LD	A,(_page)
+	INC	A
+	LD	(_page),A
+;  152			}
+;  153		} else if(key(key_Del)) {
+	JR	L_75
+L_72:
+	LD	BC,_key_Del
+	PUSH	BC
+	CALL	_key
+	POP	BC
+	OR	A,A
+	JR	Z,L_75
+;  154			gameState = MENU;
+	LD	BC,0
+	LD	(_gameState),BC
+;  155		}
+;  156	}
+L_75:
+	RET	
+
+
+;**************************** _updateStats ***************************
+;Name                         Addr/Register   Size   Type
+;_gameState                          IMPORT      3   variable
+;_key_Del                            IMPORT      2   variable
+;_key_right                          IMPORT      2   variable
+;_page                               STATIC      1   variable
+;_key_left                           IMPORT      2   variable
+;_key                                IMPORT  -----   function
+
+
+; Stack Frame Size: 6 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+;  157	
+;  158	void print_string_centered(const char *str, uint16_t y) {
+_print_string_centered:
+	CALL	__frameset0
+;  159	    gfx_PrintStringXY(str, (gfx_lcdWidth-gfx_GetStringWidth(str)) / 2, y);
+	LD	BC,(IX+9)
+	CALL	__stoiu
+	PUSH	HL
+	LD	BC,(IX+6)
+	PUSH	BC
+	CALL	_gfx_GetStringWidth
+	POP	BC
+	LD	BC,HL
+	LD	HL,320
+	OR	A,A
+	SBC	HL,BC
+	LD	A,1
+	CALL	__ishru_b
+	PUSH	HL
+	LD	BC,(IX+6)
+	PUSH	BC
+	CALL	_gfx_PrintStringXY
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _print_string_centered ***************************
+;Name                         Addr/Register   Size   Type
+;_gfx_GetStringWidth                 IMPORT  -----   function
+;_gfx_PrintStringXY                  IMPORT  -----   function
+;y                                     IX+9      2   parameter
+;str                                   IX+6      3   parameter
+
+
+; Stack Frame Size: 12 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+	XREF _maxLvl:ROM
+	XREF _curentLevel:ROM
+	XREF _gameState:ROM
+	XREF _Pushs:ROM
+	XREF _Moves:ROM
+	XREF _key_right:ROM
+	XREF _key_left:ROM
+	XREF _key_down:ROM
+	XREF _key_up:ROM
+	XREF _key_Del:ROM
+	XREF _key_2nd:ROM
+	XREF _key:ROM
+	XREF _newGame:ROM
+	XREF _startGame:ROM
+	XREF _intro_data:ROM
+	XREF _doctor_chicken_data:ROM
+	XREF _chicken_down_data:ROM
+	XREF _gfx_GetStringWidth:ROM
+	XREF _gfx_ScaledTransparentSprite_NoClip:ROM
+	XREF _gfx_SetTextXY:ROM
+	XREF _gfx_PrintStringXY:ROM
+	XREF _gfx_PrintUInt:ROM
+	XREF _gfx_SwapDraw:ROM
+	XREF _gfx_FillCircle:ROM
+	XREF _gfx_FillRectangle:ROM
+	XREF _gfx_FillScreen:ROM
+	XREF _gfx_SetColor:ROM
+	XREF _os_GetCSC:ROM
+	XREF _random:ROM
+	XREF __iremu:ROM
+	XREF __stoiu:ROM
+	XREF __frameset0:ROM
+	XREF __frameset:ROM
+	XREF __setflag:ROM
+	XREF __icmpzero:ROM
+	XREF __imul_b:ROM
+	XREF __ishru_b:ROM
+	XDEF _print_string_centered
+	XDEF _updateStats
+	XDEF _updateMenu
+	XDEF _renderMenu
+	XDEF _renderBackground
+	XDEF _end
+	XDEF _introd
+	XDEF _renderStats
+	XDEF _yPos
+	XDEF _page
+	END

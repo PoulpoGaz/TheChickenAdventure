@@ -1,0 +1,174 @@
+; Zilog eZ80 ANSI C Compiler Release 3.4
+; -optsize -noreduceopt -nomodsect -peephole -globalopt
+; -localcse -const=ROM 
+	FILE	"SRC\FADEHANDLER.C"
+	.assume ADL=1
+	SEGMENT DATA
+_levelLight:
+	DB	0
+;    1	#include "fadeHandler.h"
+;    2	
+;    3	uint8_t levelLight = 0;
+	SEGMENT CODE
+;    4	
+;    5	void FadeIn() {
+_FadeIn:
+	LD	HL,-1
+	CALL	__frameset
+;    6	    uint8_t i=0;
+;    7	    for (i = levelLight; i > 40; i--) {
+	LD	A,(_levelLight)
+	LD	(IX+-1),A
+	JR	L_3
+L_1:
+;    8	        boot_WaitShort();
+	CALL	_boot_WaitShort
+;    9	        lcd_BacklightLevel = i;
+	LD	A,(IX+-1)
+	LD	(16121892),A
+	DEC	(IX+-1)
+;   10	    }
+L_3:
+	LD	A,40
+	CP	A,(IX+-1)
+	JR	C,L_1
+;   11	}
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _FadeIn ***************************
+;Name                         Addr/Register   Size   Type
+;_boot_WaitShort                     IMPORT  -----   function
+;_levelLight                         STATIC      1   variable
+;i                                     IX-1      1   variable
+
+
+; Stack Frame Size: 7 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+;   12	
+;   13	void FadeOut() {
+_FadeOut:
+	LD	HL,-1
+	CALL	__frameset
+;   14		uint8_t i=0;
+;   15	    for (i = levelLight; i < 200; i++) {
+	LD	A,(_levelLight)
+	LD	(IX+-1),A
+	JR	L_8
+L_6:
+;   16	        boot_WaitShort();
+	CALL	_boot_WaitShort
+;   17	        lcd_BacklightLevel = i;
+	LD	A,(IX+-1)
+	LD	(16121892),A
+	INC	(IX+-1)
+;   18	    }
+L_8:
+	LD	A,(IX+-1)
+	CP	A,200
+	JR	C,L_6
+;   19	}
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _FadeOut ***************************
+;Name                         Addr/Register   Size   Type
+;_boot_WaitShort                     IMPORT  -----   function
+;_levelLight                         STATIC      1   variable
+;i                                     IX-1      1   variable
+
+
+; Stack Frame Size: 7 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+;   20	
+;   21	void initFade() {
+_initFade:
+;   22		levelLight = lcd_BacklightLevel;
+	LD	A,(16121892)
+	LD	(_levelLight),A
+;   23	}
+	RET	
+
+
+;**************************** _initFade ***************************
+;Name                         Addr/Register   Size   Type
+;_levelLight                         STATIC      1   variable
+
+
+; Stack Frame Size: 6 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+;   24	
+;   25	void exitFade() {
+_exitFade:
+;   26		lcd_BacklightLevel = levelLight;
+	LD	A,(_levelLight)
+	LD	(16121892),A
+;   27	}
+	RET	
+
+
+;**************************** _exitFade ***************************
+;Name                         Addr/Register   Size   Type
+;_levelLight                         STATIC      1   variable
+
+
+; Stack Frame Size: 6 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+;   28	
+;   29	void nopwait(uint16_t a) {
+_nopwait:
+	LD	HL,-2
+	CALL	__frameset
+;   30	    uint16_t j;
+;   31	    for (j=0; j<a; j++) asm("nop");
+	LD	(IX+-2),0
+	LD	(IX+-1),0
+	JR	L_15
+L_13:
+nop
+	LD	HL,(IX+-2)
+	INC	HL
+	LD	(IX+-2),L
+	LD	(IX+-1),H
+L_15:
+	LD	BC,(IX+6)
+	LD	HL,(IX+-2)
+	OR	A,A
+	SBC.SIS	HL,BC
+	JR	C,L_13
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _nopwait ***************************
+;Name                         Addr/Register   Size   Type
+;j                                     IX-2      2   variable
+;a                                     IX+6      2   parameter
+
+
+; Stack Frame Size: 11 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+	XREF _boot_WaitShort:ROM
+	XREF __frameset:ROM
+	XDEF _nopwait
+	XDEF _exitFade
+	XDEF _initFade
+	XDEF _FadeOut
+	XDEF _FadeIn
+	XDEF _levelLight
+	END

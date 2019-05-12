@@ -1,0 +1,214 @@
+; Zilog eZ80 ANSI C Compiler Release 3.4
+; -optsize -noreduceopt -nomodsect -peephole -globalopt
+; -localcse -const=ROM 
+	FILE	"SRC\KEYHANDLER.C"
+	.assume ADL=1
+	SEGMENT BSS
+_key_2nd:
+	DS	2
+_key_Del:
+	DS	2
+_key_up:
+	DS	2
+_key_down:
+	DS	2
+_key_left:
+	DS	2
+_key_right:
+	DS	2
+;    1	#include "keyHandler.h"
+;    2	
+;    3	bool key_2nd[2];
+;    4	bool key_Del[2];
+;    5	
+;    6	bool key_up[2];
+;    7	bool key_down[2];
+;    8	bool key_left[2];
+;    9	bool key_right[2];
+	SEGMENT CODE
+;   10	
+;   11	void setKey() {
+_setKey:
+;   12	  kb_Scan();
+	CALL	_kb_Scan
+;   13	
+;   14	  key_2nd[0] = kb_Data[1] == kb_2nd;
+	LD	A,(16056338)
+	CP	A,32
+	JR	NZ,L__1
+	LD	A,1
+	JR	L__2
+L__1:
+	XOR	A,A
+L__2:
+	LD	(_key_2nd),A
+;   15	  key_Del[0] = kb_Data[1] == kb_Del;
+	LD	A,(16056338)
+	CP	A,128
+	JR	NZ,L__4
+	LD	A,1
+	JR	L__5
+L__4:
+	XOR	A,A
+L__5:
+	LD	(_key_Del),A
+;   16	  key_up[0] = kb_Data[7] == kb_Up;
+	LD	A,(16056350)
+	CP	A,8
+	JR	NZ,L__7
+	LD	A,1
+	JR	L__8
+L__7:
+	XOR	A,A
+L__8:
+	LD	(_key_up),A
+;   17	  key_down[0] = kb_Data[7] == kb_Down;
+	LD	A,(16056350)
+	CP	A,1
+	JR	NZ,L__10
+	LD	A,1
+	JR	L__11
+L__10:
+	XOR	A,A
+L__11:
+	LD	(_key_down),A
+;   18	  key_left[0] = kb_Data[7] == kb_Left;
+	LD	A,(16056350)
+	CP	A,2
+	JR	NZ,L__13
+	LD	A,1
+	JR	L__14
+L__13:
+	XOR	A,A
+L__14:
+	LD	(_key_left),A
+;   19	  key_right[0] = kb_Data[7] == kb_Right;
+	LD	A,(16056350)
+	CP	A,4
+	JR	NZ,L__16
+	LD	A,1
+	JR	L__17
+L__16:
+	XOR	A,A
+L__17:
+	LD	(_key_right),A
+;   20	}
+	RET	
+
+
+;**************************** _setKey ***************************
+;Name                         Addr/Register   Size   Type
+;_key_right                          STATIC      2   variable
+;_key_left                           STATIC      2   variable
+;_key_down                           STATIC      2   variable
+;_key_up                             STATIC      2   variable
+;_key_Del                            STATIC      2   variable
+;_key_2nd                            STATIC      2   variable
+;_kb_Scan                            IMPORT  -----   function
+
+
+; Stack Frame Size: 6 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+;   21	
+;   22	void setPreKey() {
+_setPreKey:
+;   23	  key_2nd[1] = key_2nd[0];
+	LD	HL,_key_2nd
+	INC	HL
+	LD	A,(_key_2nd)
+	LD	(HL),A
+;   24	  key_Del[1] = key_Del[0];
+	LD	HL,_key_Del
+	INC	HL
+	LD	A,(_key_Del)
+	LD	(HL),A
+;   25	  key_up[1] = key_up[0];
+	LD	HL,_key_up
+	INC	HL
+	LD	A,(_key_up)
+	LD	(HL),A
+;   26	  key_down[1] = key_down[0];
+	LD	HL,_key_down
+	INC	HL
+	LD	A,(_key_down)
+	LD	(HL),A
+;   27	  key_left[1] = key_left[0];
+	LD	HL,_key_left
+	INC	HL
+	LD	A,(_key_left)
+	LD	(HL),A
+;   28	  key_right[1] = key_right[0];
+	LD	HL,_key_right
+	INC	HL
+	LD	A,(_key_right)
+	LD	(HL),A
+;   29	}
+	RET	
+
+
+;**************************** _setPreKey ***************************
+;Name                         Addr/Register   Size   Type
+;_key_right                          STATIC      2   variable
+;_key_left                           STATIC      2   variable
+;_key_down                           STATIC      2   variable
+;_key_up                             STATIC      2   variable
+;_key_Del                            STATIC      2   variable
+;_key_2nd                            STATIC      2   variable
+
+
+; Stack Frame Size: 6 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+;   30	
+;   31	bool key(bool keys[2]) {
+_key:
+	LD	HL,-3
+	CALL	__frameset
+;   32	  return keys[0] && ! keys[1];
+	LD	HL,(IX+6)
+	LD	A,(HL)
+	OR	A,A
+	JR	Z,L_4
+	LD	HL,(IX+6)
+	INC	HL
+	LD	A,(HL)
+	OR	A,A
+	JR	NZ,L_4
+	LD	BC,1
+	LD	(IX+-3),BC
+	JR	L_5
+L_4:
+	LD	BC,0
+	LD	(IX+-3),BC
+L_5:
+	LD	A,(IX+-3)
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _key ***************************
+;Name                         Addr/Register   Size   Type
+;temp6                                 IX-3      3   variable
+;keys                                  IX+6      3   parameter
+
+
+; Stack Frame Size: 12 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+	XREF _kb_Scan:ROM
+	XREF __frameset:ROM
+	XDEF _key
+	XDEF _setPreKey
+	XDEF _setKey
+	XDEF _key_right
+	XDEF _key_left
+	XDEF _key_down
+	XDEF _key_up
+	XDEF _key_Del
+	XDEF _key_2nd
+	END
